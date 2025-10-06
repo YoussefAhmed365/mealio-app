@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
 import 'package:mealio/src/core/router/app_router.dart';
 
-class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+class GetstartedScreen extends StatefulWidget {
+  const GetstartedScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  State<GetstartedScreen> createState() => _GetstartedScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _GetstartedScreenState extends State<GetstartedScreen> {
   // PageController للتحكم في الصفحات (الانتقال والسحب)
   final PageController _pageController = PageController();
   int _currentPage = 0;
@@ -30,15 +30,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 16.0),
           child: Column(
             children: [
               // --- رأس الصفحة: شعار التطبيق ---
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  'Meal.io',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.amber[800]),
+                child: Row(
+                  children: [
+                    Text(
+                      'Meal',
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.amber[800]),
+                    ),
+                    Text(
+                      '.io',
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.brown[700]),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 24),
@@ -78,6 +86,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // --- ويدجت بناء الخطوة الأولى ---
   Widget _buildStepOne() {
     return SingleChildScrollView(
+      padding: const EdgeInsets.all(5.0),
       child: Column(
         children: [
           Text(
@@ -97,7 +106,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             textAlign: TextAlign.center,
             style: TextStyle(color: secondaryTextColor, fontSize: 16),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 28),
           // --- صورة البرجر مع الكارت الذي يعلوها ---
           Stack(
             clipBehavior: Clip.none,
@@ -105,11 +114,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(24),
-                child: Image.network(
-                  'https://lh3.googleusercontent.com/aida-public/AB6AXuBrrN6QShzBttaPv-vBO_DuBIkaDI8j_1ebGZPq4peolXCR0SA7QuVTxGXPw2oOzJyXakhxGJXrDcGB7O1TzRVbXT_vPZaMx_h27mxNpSj6oSUCJ3zkodST7nVAzxMECLb8HZlBgHh2_wnskJSYQD9butNjgVdOi7LQuQG2QW8-LazUlWf4ZUqU6Ikez8d5_6qJ4ZApxi7bJzS3Zd3Z8tLl8FGcppiia7awvQVRzKTP8WarubD9_GQq8CJyET1PxyqQOJTcRycLCdY',
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-                ),
+                child: Image.asset('assets/images/getstarted1.webp', fit: BoxFit.cover, height: 300, width: MediaQuery.of(context).size.width),
               ),
               Positioned(
                 bottom: -40,
@@ -134,7 +139,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 80), // مسافة إضافية بسبب الكارت
+          const SizedBox(height: 60), // مسافة إضافية بسبب الكارت
           // --- زر البدء ---
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -160,7 +165,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // --- ويدجت بناء الخطوة الثانية ---
   Widget _buildStepTwo() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(5.0),
       child: Column(
         children: [
           Text(
@@ -214,7 +219,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // --- ويدجت بناء الخطوة الثالثة ---
   Widget _buildStepThree() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(5.0),
       child: Column(
         children: [
           Container(
@@ -242,10 +247,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 24),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16),
-                  child: Image.network(
-                    'https://lh3.googleusercontent.com/aida-public/AB6AXuB6A4hiQ9hwnlu9j7yJes4eb7ZCys9qGmwP6acAdNrnNjrR-8kTSMTNvUds1HOTR2Y4WCjwryMVEf80Xz32YAB3WZNw5FxOhvzkQ833ME1XX77LSmNY5PkVoZMod8bvtCA1SmbpBrlLQlJ9OIII1LovxsJlGH1JdRiJ2MvPhaBG-QGNSIeyFhv6aI33FK8f7ZQkSiGE_GOCZxHpKZQBZK54HOmdJfzBkp_FDMcRReQUHzQxQDQcdXibx6FdS7ir2RLEwMa2p6Gytek',
-                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-                  ),
+                  child: Image.asset('assets/images/getstarted2.webp', width: MediaQuery.of(context).size.width, height: 300, fit: BoxFit.cover),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
@@ -258,7 +260,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     router.go('/signup');
                   },
                   child: const Text(
-                    'Create Your Account!',
+                    'Create Your Account',
                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),

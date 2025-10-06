@@ -21,6 +21,8 @@ class _AppState extends State<App> {
       theme: ThemeData(
         // استخدام خط 'Nunito' كما هو محدد في التصميم
         textTheme: Theme.of(context).textTheme.apply(fontFamily: 'Nunito', bodyColor: textColor, displayColor: textColor),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        useMaterial3: true,
       ),
       routerConfig: router,
     );

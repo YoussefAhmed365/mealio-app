@@ -40,6 +40,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/auth-bg.webp
+    - assets/images/getstarted1.webp
+    - assets/images/getstarted2.webp
+
   fonts:
     - family: Nunito
       fonts:
