@@ -38,6 +38,7 @@ class _SignupScreenState extends State<SignupScreen> {
           padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 24.0),
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width,
@@ -55,12 +56,12 @@ class _SignupScreenState extends State<SignupScreen> {
                         children: [
                           Text(
                             "\"I have generated my weekly plan in easy way just with one tap, managed meals, set salary, and track my calories.\"",
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
                           ),
                           const SizedBox(height: 30),
                           Text(
                             "John Doe",
-                            style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 18),
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white70),
                           ),
                         ],
                       ),
@@ -72,21 +73,21 @@ class _SignupScreenState extends State<SignupScreen> {
                   children: [
                     Text(
                       'Meal',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.amber[800]),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.amber[800], fontVariations: <FontVariation>[FontVariation('wght', 700.0)]),
                     ),
                     Text(
                       '.io',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.brown[700]),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.brown[700], fontVariations: <FontVariation>[FontVariation('wght', 700.0)]),
                     ),
                   ],
                 ),
                 Text(
                   "Create a new account!",
-                  style: TextStyle(color: textColor, fontSize: 38, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 Text(
                   "Join us now and try Meal.io to see the magic in planning",
-                  style: TextStyle(color: secondaryTextColor, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
                 ),
                 const SizedBox(height: 30),
                 Form(
@@ -111,13 +112,13 @@ class _SignupScreenState extends State<SignupScreen> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFEF6C00), // Orange color from image
+                            backgroundColor: Colors.amber[800],
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                           ),
                           child: const Text(
                             'Sign Up',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                            style: TextStyle(fontSize: 18, fontVariations: <FontVariation>[FontVariation('wght', 500.0)], color: Colors.white),
                           ),
                         ),
                       ),
@@ -130,7 +131,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     Expanded(child: Container(height: 1, color: secondaryTextColor)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text("OR", style: TextStyle(color: secondaryTextColor, fontSize: 16)),
+                      child: Text("OR", style: Theme.of(context).textTheme.titleMedium?.copyWith(color: secondaryTextColor),),
                     ),
                     Expanded(child: Container(height: 1, color: secondaryTextColor)),
                   ],
@@ -151,7 +152,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   children: [
                     Text(
                       "Already have an account?",
-                      style: TextStyle(color: secondaryTextColor, fontSize: 15, fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
                     ),
                     TextButton(
                       onPressed: () {
@@ -159,7 +160,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       },
                       child: Text(
                         "Sign In",
-                        style: TextStyle(color: Colors.amber[800], fontSize: 15, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.amber[800], decoration: TextDecoration.underline, decorationColor: Colors.amber[800], decorationThickness: 2.0),
                       ),
                     ),
                   ],
@@ -219,7 +220,7 @@ class CustomTextField extends StatelessWidget {
       children: [
         Text(
           labelText,
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blueGrey[900], fontSize: 16),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.blueGrey[900]),
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -228,7 +229,7 @@ class CustomTextField extends StatelessWidget {
           keyboardType: keyboardType,
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: TextStyle(color: Colors.grey[500]),
+            hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.blueGrey[500]),
             contentPadding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),

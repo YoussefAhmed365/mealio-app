@@ -40,11 +40,11 @@ class _GetstartedScreenState extends State<GetstartedScreen> {
                   children: [
                     Text(
                       'Meal',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.amber[800]),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.amber[800], fontVariations: <FontVariation>[FontVariation('wght', 700.0)]),
                     ),
                     Text(
                       '.io',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.brown[700]),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.brown[700], fontVariations: <FontVariation>[FontVariation('wght', 700.0)]),
                     ),
                   ],
                 ),
@@ -92,19 +92,19 @@ class _GetstartedScreenState extends State<GetstartedScreen> {
           Text(
             'FROM CRAVINGS TO CALENDAR, SEAMLESSLY',
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.amber[800], fontWeight: FontWeight.w600, fontSize: 12, fontFamily: 'Winslow'),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.amber[800], fontFamily: 'Winslow')
           ),
           const SizedBox(height: 8),
           Text(
             'Crafting Your Ideal Weekly Menu, Intelligently Designed',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: textColor),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: 28, fontVariations: <FontVariation>[FontVariation('wght', 800.0)]),
           ),
           const SizedBox(height: 16),
           Text(
             'Meal.io is a revolutionary application that harnesses the power of AI to learn your food preferences and generate personalized weekly meal plans.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: secondaryTextColor, fontSize: 16),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor)
           ),
           const SizedBox(height: 28),
           // --- صورة البرجر مع الكارت الذي يعلوها ---
@@ -130,9 +130,9 @@ class _GetstartedScreenState extends State<GetstartedScreen> {
                     children: [
                       Text(
                         '18k+',
-                        style: TextStyle(color: Colors.amber[800], fontSize: 32, fontWeight: FontWeight.w900),
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.amber[800], fontVariations: <FontVariation>[FontVariation.weight(800)])
                       ),
-                      Text('Awards Winning', style: TextStyle(color: secondaryTextColor, fontSize: 12)),
+                      Text('Awards Winning', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor)),
                     ],
                   ),
                 ),
@@ -152,9 +152,9 @@ class _GetstartedScreenState extends State<GetstartedScreen> {
             onPressed: () {
               _pageController.nextPage(duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
             },
-            child: const Text(
+            child: Text(
               'Get Started',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white, fontVariations: <FontVariation>[FontVariation('wght', 700.0)]),
             ),
           ),
         ],
@@ -170,13 +170,13 @@ class _GetstartedScreenState extends State<GetstartedScreen> {
         children: [
           Text(
             'PLAN YOUR MEALS',
-            style: TextStyle(color: Colors.amber[800], fontWeight: FontWeight.w600, fontSize: 12, fontFamily: 'Winslow'),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.amber[800], fontFamily: 'Winslow')
           ),
           const SizedBox(height: 8),
           Text(
             'Get Your Ideas Ready In Just A Minute With Generative AI!',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textColor),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: 28, fontVariations: <FontVariation>[FontVariation('wght', 800.0)]),
           ),
           const SizedBox(height: 24),
           Container(
@@ -206,9 +206,9 @@ class _GetstartedScreenState extends State<GetstartedScreen> {
             onPressed: () {
               _pageController.nextPage(duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
             },
-            child: const Text(
+            child: Text(
               'Next',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white, fontVariations: <FontVariation>[FontVariation('wght', 700.0)]),
             ),
           ),
         ],
@@ -235,14 +235,14 @@ class _GetstartedScreenState extends State<GetstartedScreen> {
                 const SizedBox(height: 16),
                 Text(
                   'Your Personalized Plan is Here!',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: textColor),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: 28, fontVariations: <FontVariation>[FontVariation('wght', 800.0)]),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'The AI will generate a tailored meal plan with all the meal details, including the name, description, and an enticing image.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: secondaryTextColor),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor)
                 ),
                 const SizedBox(height: 24),
                 ClipRRect(
@@ -259,9 +259,9 @@ class _GetstartedScreenState extends State<GetstartedScreen> {
                   onPressed: () {
                     router.go('/signup');
                   },
-                  child: const Text(
+                  child: Text(
                     'Create Your Account',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white, fontVariations: <FontVariation>[FontVariation('wght', 700.0)]),
                   ),
                 ),
               ],
@@ -294,10 +294,10 @@ class _FeatureTile extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: textColor),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontVariations: <FontVariation>[FontVariation('wght', 800.0)]),
               ),
               const SizedBox(height: 4),
-              Text(subtitle, style: TextStyle(color: secondaryTextColor, height: 1.5)),
+              Text(subtitle, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor, height: 1.5)),
             ],
           ),
         ),
