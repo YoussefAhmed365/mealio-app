@@ -1,7 +1,8 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
 import 'package:mealio/src/core/router/app_router.dart';
+import '../widgets/custom_auth_textfield.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,265 +12,137 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Key for managing the form state
   final _formKey = GlobalKey<FormState>();
-
-  // Controllers for managing form field state
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  @override
-  void dispose() {
-    // Always dispose of controllers to free up resources
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 24.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 60, left: 30),
+            child: Row(
               children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24.0),
-                    image: const DecorationImage(image: AssetImage('assets/images/auth-bg.webp'), fit: BoxFit.cover),
-                  ),
-                  child: GlassmorphicContainer(
-                    borderRadius: 16.0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 40.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("— Meal.io —", style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
-                          const SizedBox(height: 20),
-                          Text("We are", style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
-                          const SizedBox(height: 10),
-                          Text("Plan your meals.", style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white)),
-                          const SizedBox(height: 10),
-                          Text("10 million+ people joined our app, be one of them now", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
-                          const SizedBox(height: 40),
-                          Stack(
-                            children: [
-                              Text(
-                                "Powered with AI",
-                                // نأخذ النمط الافتراضي ونعدّل عليه فقط
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                Text(
+                  'Meal',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: primaryColor, fontWeight: FontWeight.w700),
                 ),
-                const SizedBox(height: 40),
-                Row(
-                  children: [
-                    Text(
-                      'Meal',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.amber[800], fontVariations: <FontVariation>[FontVariation('wght', 700.0)]),
-                    ),
-                    Text(
-                      '.io',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.brown[700], fontVariations: <FontVariation>[FontVariation('wght', 700.0)]),
-                    ),
-                  ],
-                ),
-                Text("Welcome back!", style: Theme.of(context).textTheme.headlineLarge),
-                Text("To keep connected with us please login with your personal info", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor)),
-                const SizedBox(height: 30),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      CustomTextField(controller: _emailController, labelText: 'Email', hintText: 'Your Email', keyboardType: TextInputType.emailAddress),
-                      const SizedBox(height: 10),
-                      CustomTextField(controller: _passwordController, labelText: 'Password', hintText: 'Your Password', obscureText: true),
-                      const SizedBox(height: 30),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState?.validate() ?? false) {
-                              // Handle sign up logic here
-                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Signing up...')));
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.amber[800],
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-                          ),
-                          child: const Text('Sign In', style: TextStyle(fontSize: 18, color: Colors.white)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    router.push('/restore-account');
-                  },
-                  child: Text(
-                    "Forgot your password?",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.amber[800], decoration: TextDecoration.underline, decorationColor: Colors.amber[800], decorationThickness: 2.0),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                Row(
-                  children: [
-                    Expanded(child: Container(height: 1, color: secondaryTextColor)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text("OR", style: Theme.of(context).textTheme.titleMedium?.copyWith(color: secondaryTextColor)),
-                    ),
-                    Expanded(child: Container(height: 1, color: secondaryTextColor)),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                Row(
-                  children: [
-                    SocialSignButtons(icon: Icon(Icons.g_mobiledata, size: 26)),
-                    const SizedBox(width: 10),
-                    SocialSignButtons(icon: Icon(Icons.window, size: 26)),
-                    const SizedBox(width: 10),
-                    SocialSignButtons(icon: Icon(Icons.facebook, size: 26)),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                Row(
-                  children: [
-                    Text("Don't have an account?", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor)),
-                    TextButton(
-                      onPressed: () {
-                        router.push('/signup');
-                      },
-                      child: Text(
-                        "Create a new account",
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.amber[800], decoration: TextDecoration.underline, decorationColor: Colors.amber[800], decorationThickness: 2.0),
-                      ),
-                    ),
-                  ],
+                Text(
+                  '.io',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.brown[700], fontWeight: FontWeight.w700),
                 ),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class GlassmorphicContainer extends StatelessWidget {
-  final Widget child;
-  final double blur;
-  final double borderRadius;
-  final Color color;
-  final Color borderColor;
-  final double borderWidth;
-
-  const GlassmorphicContainer({super.key, required this.child, this.blur = 12.0, this.borderRadius = 16.0, this.color = Colors.white24, this.borderColor = Colors.white30, this.borderWidth = 2.5});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-        child: Container(
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(color: borderColor, width: borderWidth),
+          Container(
+            width: screenWidth,
+            height: screenHeight,
+            padding: const EdgeInsets.all(30),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 120),
+                  Text("Sign In", style: Theme.of(context).textTheme.headlineLarge),
+                  const SizedBox(height: 10),
+                  Text("Hi, welcome back! You've missed", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor)),
+                  const SizedBox(height: 30),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        const CustomAuthTextField(labelText: "Email"),
+                        const SizedBox(height: 20),
+                        const CustomAuthTextField(labelText: "Password"),
+                        const SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              router.push('/forgot-password');
+                            },
+                            child: Text(
+                              "Forgot Password?",
+                              style: TextStyle(color: Colors.amber.shade800, decoration: TextDecoration.underline, decorationThickness: 2, decorationColor: Colors.amber.shade800),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: ButtonStyle(padding: WidgetStateProperty.all<EdgeInsets>(const EdgeInsets.symmetric(vertical: 13)), backgroundColor: WidgetStateProperty.all<Color>(Colors.amber.shade800)),
+                            child: Text(
+                              "Sign In",
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white, fontSize: 18, fontVariations: <FontVariation>[FontVariation('wght', 700)]),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(child: Divider(color: Colors.grey.shade400)),
+                            const SizedBox(width: 10),
+                            Text("Or sign in with", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade400)),
+                            const SizedBox(width: 10),
+                            Expanded(child: Divider(color: Colors.grey.shade400)),
+                          ],
+                        ),
+                        const SizedBox(height: 40),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton.outlined(
+                              onPressed: () {},
+                              icon: SvgPicture.asset('assets/icons/google-icon.svg', width: 30, height: 30),
+                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+                              style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                            ),
+                            const SizedBox(width: 20),
+                            IconButton.outlined(
+                              onPressed: () {},
+                              icon: SvgPicture.asset('assets/icons/microsoft-icon.svg', width: 30, height: 30),
+                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+                              style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                            ),
+                            const SizedBox(width: 20),
+                            IconButton.outlined(
+                              onPressed: () {},
+                              icon: const Icon(Icons.facebook, size: 30),
+                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+                              style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Don't have an account?"),
+                            TextButton(
+                              onPressed: () {
+                                router.push('/signup');
+                              },
+                              child: Text(
+                                "Sign Up",
+                                style: TextStyle(color: Colors.amber.shade800, decoration: TextDecoration.underline, decorationThickness: 2, decorationColor: Colors.amber.shade800),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
-// --- Reusable Custom Text Field Widget ---
-class CustomTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String labelText;
-  final String hintText;
-  final bool obscureText;
-  final TextInputType keyboardType;
-
-  const CustomTextField({super.key, required this.controller, required this.labelText, required this.hintText, this.obscureText = false, this.keyboardType = TextInputType.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(labelText, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.blueGrey[900])),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: controller,
-          obscureText: obscureText,
-          keyboardType: keyboardType,
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.blueGrey[500]),
-            contentPadding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
-              borderSide: BorderSide(color: Colors.amber.shade800, width: 2.0),
-            ),
-          ),
-          // You can add validators here
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your $labelText';
-            }
-            return null;
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class SocialSignButtons extends StatelessWidget {
-  final Icon icon;
-
-  const SocialSignButtons({super.key, required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: OutlinedButton(
-        onPressed: () {},
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(width: 1, color: Theme.of(context).colorScheme.outline),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          padding: const EdgeInsets.all(16.0),
-        ),
-        child: icon,
+        ],
       ),
     );
   }

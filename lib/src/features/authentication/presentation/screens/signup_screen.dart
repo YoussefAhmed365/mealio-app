@@ -1,7 +1,8 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
 import 'package:mealio/src/core/router/app_router.dart';
+import '../widgets/custom_auth_textfield.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -11,268 +12,207 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  // Key for managing the form state
   final _formKey = GlobalKey<FormState>();
-
-  // Controllers for managing form field state
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  @override
-  void dispose() {
-    // Always dispose of controllers to free up resources
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 24.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 60, left: 30),
+            child: Row(
               children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.all(18.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24.0),
-                    image: const DecorationImage(image: AssetImage('assets/images/auth-bg.webp'), fit: BoxFit.cover),
-                  ),
-                  child: GlassmorphicContainer(
-                    borderRadius: 16.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "\"I have generated my weekly plan in easy way just with one tap, managed meals, set salary, and track my calories.\"",
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
-                          ),
-                          const SizedBox(height: 30),
-                          Text(
-                            "John Doe",
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white70),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                Row(
-                  children: [
-                    Text(
-                      'Meal',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.amber[800], fontVariations: <FontVariation>[FontVariation('wght', 700.0)]),
-                    ),
-                    Text(
-                      '.io',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.brown[700], fontVariations: <FontVariation>[FontVariation('wght', 700.0)]),
-                    ),
-                  ],
+                Text(
+                  'Meal',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: primaryColor, fontWeight: FontWeight.w700),
                 ),
                 Text(
-                  "Create a new account!",
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
-                Text(
-                  "Join us now and try Meal.io to see the magic in planning",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
-                ),
-                const SizedBox(height: 30),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      CustomTextField(controller: _firstNameController, labelText: 'First Name', hintText: 'Your First Name'),
-                      const SizedBox(height: 10),
-                      CustomTextField(controller: _lastNameController, labelText: 'Last Name', hintText: 'Your Last Name'),
-                      const SizedBox(height: 10),
-                      CustomTextField(controller: _emailController, labelText: 'Email', hintText: 'Your Email', keyboardType: TextInputType.emailAddress),
-                      const SizedBox(height: 10),
-                      CustomTextField(controller: _passwordController, labelText: 'Password', hintText: 'Your Password', obscureText: true),
-                      const SizedBox(height: 30),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState?.validate() ?? false) {
-                              // Handle sign up logic here
-                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Signing up...')));
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.amber[800],
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-                          ),
-                          child: const Text(
-                            'Sign Up',
-                            style: TextStyle(fontSize: 18, fontVariations: <FontVariation>[FontVariation('wght', 500.0)], color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 30),
-                Row(
-                  children: [
-                    Expanded(child: Container(height: 1, color: secondaryTextColor)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text("OR", style: Theme.of(context).textTheme.titleMedium?.copyWith(color: secondaryTextColor),),
-                    ),
-                    Expanded(child: Container(height: 1, color: secondaryTextColor)),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                Row(
-                  children: [
-                    SocialSignButtons(icon: Icon(Icons.g_mobiledata, size: 26)),
-                    const SizedBox(width: 10),
-                    SocialSignButtons(icon: Icon(Icons.window, size: 26)),
-                    const SizedBox(width: 10),
-                    SocialSignButtons(icon: Icon(Icons.facebook, size: 26)),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Already have an account?",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        router.push('/login');
-                      },
-                      child: Text(
-                        "Sign In",
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.amber[800], decoration: TextDecoration.underline, decorationColor: Colors.amber[800], decorationThickness: 2.0),
-                      ),
-                    ),
-                  ],
+                  '.io',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.brown[700], fontWeight: FontWeight.w700),
                 ),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class GlassmorphicContainer extends StatelessWidget {
-  final Widget child;
-  final double blur;
-  final double borderRadius;
-  final Color color;
-  final Color borderColor;
-  final double borderWidth;
-
-  const GlassmorphicContainer({super.key, required this.child, this.blur = 12.0, this.borderRadius = 16.0, this.color = Colors.white24, this.borderColor = Colors.white30, this.borderWidth = 2.5});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-        child: Container(
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(color: borderColor, width: borderWidth),
+          Container(
+            width: screenWidth,
+            height: screenHeight,
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 100),
+                  Text("Create Account", style: Theme.of(context).textTheme.headlineLarge),
+                  const SizedBox(height: 10),
+                  Text("Join us now and try Meal.io to see the magic in planning", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor), textAlign: TextAlign.center),
+                  const SizedBox(height: 30),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("First Name", style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontVariations: <FontVariation>[FontVariation('wght', 700)])),
+                                  const SizedBox(height: 10),
+                                  TextFormField(
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter your first name';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.grey.shade50,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(12.0), bottomLeft: Radius.circular(12.0)),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(12.0), bottomLeft: Radius.circular(12.0)),
+                                        borderSide: BorderSide(color: Colors.grey.shade300),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(12.0), bottomLeft: Radius.circular(12.0)),
+                                        borderSide: BorderSide(color: primaryColor ?? Colors.amber, width: 2.0),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Last Name", style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontVariations: <FontVariation>[FontVariation('wght', 700)])),
+                                  const SizedBox(height: 10),
+                                  TextFormField(
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter your last name';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.grey.shade50,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.only(topRight: Radius.circular(12.0), bottomRight: Radius.circular(12.0)),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.only(topRight: Radius.circular(12.0), bottomRight: Radius.circular(12.0)),
+                                        borderSide: BorderSide(color: Colors.grey.shade300),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.only(topRight: Radius.circular(12.0), bottomRight: Radius.circular(12.0)),
+                                        borderSide: BorderSide(color: primaryColor ?? Colors.amber, width: 2.0),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        const CustomAuthTextField(labelText: "Email"),
+                        const SizedBox(height: 10),
+                        const CustomAuthTextField(labelText: "Password"),
+                        const SizedBox(height: 5),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              router.push('/forgot-password');
+                            },
+                            child: Text(
+                              "Forgot Password?",
+                              style: TextStyle(color: Colors.amber.shade800, decoration: TextDecoration.underline, decorationThickness: 2, decorationColor: Colors.amber.shade800),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: ButtonStyle(padding: WidgetStateProperty.all<EdgeInsets>(const EdgeInsets.symmetric(vertical: 13)), backgroundColor: WidgetStateProperty.all<Color>(Colors.amber.shade800)),
+                            child: Text(
+                              "Sign In",
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white, fontSize: 18, fontVariations: <FontVariation>[FontVariation('wght', 700)]),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(child: Divider(color: Colors.grey.shade400)),
+                            const SizedBox(width: 10),
+                            Text("Or sign up with", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade400)),
+                            const SizedBox(width: 10),
+                            Expanded(child: Divider(color: Colors.grey.shade400)),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton.outlined(
+                              onPressed: () {},
+                              icon: SvgPicture.asset('assets/icons/google-icon.svg', width: 30, height: 30),
+                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+                              style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                            ),
+                            const SizedBox(width: 20),
+                            IconButton.outlined(
+                              onPressed: () {},
+                              icon: SvgPicture.asset('assets/icons/microsoft-icon.svg', width: 30, height: 30),
+                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+                              style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                            ),
+                            const SizedBox(width: 20),
+                            IconButton.outlined(
+                              onPressed: () {},
+                              icon: const Icon(Icons.facebook, size: 30),
+                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+                              style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Already have an account?"),
+                            TextButton(
+                              onPressed: () {
+                                router.go('/login');
+                              },
+                              child: Text(
+                                "Sign In",
+                                style: TextStyle(color: Colors.amber.shade800, decoration: TextDecoration.underline, decorationThickness: 2, decorationColor: Colors.amber.shade800),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
-// --- Reusable Custom Text Field Widget ---
-class CustomTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String labelText;
-  final String hintText;
-  final bool obscureText;
-  final TextInputType keyboardType;
-
-  const CustomTextField({super.key, required this.controller, required this.labelText, required this.hintText, this.obscureText = false, this.keyboardType = TextInputType.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          labelText,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.blueGrey[900]),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: controller,
-          obscureText: obscureText,
-          keyboardType: keyboardType,
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.blueGrey[500]),
-            contentPadding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
-              borderSide: BorderSide(color: Colors.amber.shade800, width: 2.0),
-            ),
-          ),
-          // You can add validators here
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your $labelText';
-            }
-            return null;
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class SocialSignButtons extends StatelessWidget {
-  final Icon icon;
-
-  const SocialSignButtons({super.key, required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: OutlinedButton(
-        onPressed: () {},
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(width: 1, color: Theme.of(context).colorScheme.outline),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          padding: const EdgeInsets.all(16.0),
-        ),
-        child: icon,
+        ],
       ),
     );
   }
