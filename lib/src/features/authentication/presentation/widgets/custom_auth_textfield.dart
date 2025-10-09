@@ -4,8 +4,10 @@ import 'package:mealio/src/core/theme/app_theme.dart';
 
 class CustomAuthTextField extends StatefulWidget {
   final String labelText;
+  final TextEditingController? controller;
+  final bool isPassword;
 
-  const CustomAuthTextField({super.key, required this.labelText});
+  const CustomAuthTextField({super.key, required this.labelText, this.controller, this.isPassword = false});
 
   @override
   State<CustomAuthTextField> createState() => _CustomAuthTextFieldState();
@@ -27,11 +29,14 @@ class _CustomAuthTextFieldState extends State<CustomAuthTextField> {
       children: [
         Text(widget.labelText, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontVariations: <FontVariation>[FontVariation('wght', 700)])),
         const SizedBox(height: 10),
-        if (widget.labelText == "Password")
+        if (widget.isPassword)
           TextFormField(
+            controller: widget.controller,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your ${widget.labelText}';
+              } else if (value.length < 8) {
+                return 'Password must be at least 8 characters long';
               }
               return null;
             },
@@ -65,9 +70,12 @@ class _CustomAuthTextFieldState extends State<CustomAuthTextField> {
           )
         else
           TextFormField(
+            controller: widget.controller,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your ${widget.labelText}';
+              } else if (widget.labelText == "Email" && !value.contains('@')) {
+                return 'Please enter a valid email address';
               }
               return null;
             },
