@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mealio/src/core/router/app_router.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
+import 'package:mealio/src/features/authentication/presentation/models/signup_details.dart';
 
 class VerifyOTP extends StatefulWidget {
   final String email;
-  final Map<String, dynamic>? signupDetails;
+  final SignupDetails? signupDetails;
   const VerifyOTP({super.key, required this.email, required this.signupDetails});
 
   @override
@@ -26,11 +27,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
     _controllers = List.generate(6, (index) => TextEditingController());
     _focusNodes = List.generate(6, (index) => FocusNode());
 
-    // You can now access the signupDetails here or in build method
-    // For example:
-    // final firstName = widget.signupDetails?['firstName'];
-    // final password = widget.signupDetails?['password'];
-    // print('VerifyOTP received - First Name: $firstName, Password: $password');
+    // Accessing data is now type-safe
+    // final firstName = widget.signupDetails?.firstName;
   }
 
   @override
@@ -164,12 +162,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
   }
 
   @override
-  Widget build(BuildContext context) {// You can access the data within the build method as well
-    // final String? receivedFirstName = widget.signupDetails?['firstName'];
-    // final String? receivedLastName = widget.signupDetails?['lastName'];
-    // final String? receivedPassword = widget.signupDetails?['password'];
-    // final bool? receivedAgreeToTerms = widget.signupDetails?['agreeToTerms'];
-
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(24.0),

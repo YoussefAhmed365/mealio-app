@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
 import 'package:mealio/src/core/router/app_router.dart';
 import '../widgets/custom_auth_textfield.dart';
+import '../models/signup_details.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -37,6 +38,19 @@ class _SignupScreenState extends State<SignupScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  // ------------------------------------------------
+  // Handling Data Validation & Security With The API
+  // ------------------------------------------------
+
+  // TODO: 1.In SignupScreen: After validating the form, make an API call to your backend with all the user details (firstName, lastName, email, password).
+  // TODO: 2.Backend Logic: The backend receives the data, hashes the password, creates a user account with a status like "pending_verification", and then sends the OTP email to the user.
+  // TODO: 3.Navigation: After the API call is successful, navigate to the OTP screen, passing only the email. You don't need the other details anymore on the client-side.
+  // TODO: 4.In VerifyOTP: The user enters the OTP. Your "Verify" button then makes a second API call to the backend with the email and the entered OTP. The backend verifies the code and, if correct, activates the user's account.
+
+  Future<void> _handleSignup(SignupDetails details) async {
+
   }
 
   @override
@@ -209,16 +223,18 @@ class _SignupScreenState extends State<SignupScreen> {
                               onPressed: () async {
                                 final form = _formKey.currentState!;
                                 if (form.validate()) {
-                                  final firstName = _firstNameController.text;
-                                  final lastName = _lastNameController.text;
                                   final email = _emailController.text;
-                                  final password = _passwordController.text;
-                                  final agreeToTerms = _isAgree;
 
-                                  // Create a map to hold all the signup details
-                                  final Map<String, dynamic> signupDetails = {'firstName': firstName, 'lastName': lastName, 'email': email, 'password': password, 'agreeToTerms': agreeToTerms};
+                                  // In SignupScreen's onPressed
+                                  final details = SignupDetails(
+                                    firstName: _firstNameController.text,
+                                    lastName: _lastNameController.text,
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                    agreeToTerms: _isAgree,
+                                  );
 
-                                  router.push('/otp/$email', extra: signupDetails);
+                                  router.push('/otp/$email', extra: details);
                                 }
                               },
                               style: ElevatedButton.styleFrom(

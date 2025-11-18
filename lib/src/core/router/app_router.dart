@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:mealio/src/features/getstarted/presentation/screens/get_started.dart';
 import 'package:mealio/src/features/authentication/presentation/screens/login_screen.dart';
+import 'package:mealio/src/features/authentication/presentation/models/signup_details.dart';
 import 'package:mealio/src/features/authentication/presentation/screens/signup_screen.dart';
 import 'package:mealio/src/features/authentication/presentation/screens/verify_otp.dart';
 
@@ -18,7 +19,7 @@ final GoRouter router = GoRouter(
       name: 'otp',
       builder: (context, state) {
         final email = state.pathParameters['email']!;
-        final Map<String, dynamic>? signupDetails = state.extra as Map<String, dynamic>?;
+        final SignupDetails? signupDetails = state.extra as SignupDetails?;
         return VerifyOTP(email: email, signupDetails: signupDetails);
       },
     ),
