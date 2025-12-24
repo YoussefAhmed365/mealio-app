@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:mealio/src/core/theme/app_theme.dart';
 import 'package:mealio/src/core/router/app_router.dart';
 import '../widgets/custom_auth_textfield.dart';
@@ -45,12 +47,42 @@ class _SignupScreenState extends State<SignupScreen> {
   // ------------------------------------------------
 
   // TODO: 1.In SignupScreen: After validating the form, make an API call to your backend with all the user details (firstName, lastName, email, password).
-  // TODO: 2.Backend Logic: The backend receives the data, hashes the password, creates a user account with a status like "pending_verification", and then sends the OTP email to the user.
-  // TODO: 3.Navigation: After the API call is successful, navigate to the OTP screen, passing only the email. You don't need the other details anymore on the client-side.
+  // TODO: 2.Backend Logic: The backend receives the data, hashes the password, creates a user account with a status "pending_verification", and then sends an OTP email to the user.
+  // TODO: 3.Navigation: After the API call is successful, navigate to the OTP screen, passing the user's email. We will need the uesr firstname, lastname, and email in the dashboard screen.
   // TODO: 4.In VerifyOTP: The user enters the OTP. Your "Verify" button then makes a second API call to the backend with the email and the entered OTP. The backend verifies the code and, if correct, activates the user's account.
-
   Future<void> _handleSignup(SignupDetails details) async {
+    // 1. Define API endpoint
+    final url = Uri.parse('http:/ocalhost:5000/api/users/register');
 
+    try {
+      // 2. Make the POST request
+      final response = await http.post(url, headers: {'Content-Type': 'application/json; charset=UTF-8'}, body: jsonEncode({'firstName': details.firstName, 'lastName': details.lastName, 'email': details.email, 'password': details.password}));
+
+      // 3. Handle the response
+      if (response.statusCode == 201) {
+        // 201 Created is a good practice for successful POSTs
+        // Successful API call
+        print('Signup successful, navigating to OTP screen.');
+        if (mounted) {
+          // Check if the widget is still in the tree
+          // Navigate to the OTP screen, passing the email
+          router.push('/otp/${details.email}');
+        }
+      } else {
+        // The server returned an error (e.g., 400 for bad request, 409 for conflict/email exists)
+        final errorData = jsonDecode(response.body);
+        print('Signup failed: ${response.statusCode} - ${errorData['message']}');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Signup failed: ${errorData['message']}')));
+        }
+      }
+    } catch (e) {
+      // Handle network errors (e.g., no internet, server down). [2]
+      print('An error occurred: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('An error occurred. Please check your connection and try again.')));
+      }
+    }
   }
 
   @override
@@ -223,18 +255,10 @@ class _SignupScreenState extends State<SignupScreen> {
                               onPressed: () async {
                                 final form = _formKey.currentState!;
                                 if (form.validate()) {
-                                  final email = _emailController.text;
+                                  final details = SignupDetails(firstName: _firstNameController.text, lastName: _lastNameController.text, email: _emailController.text, password: _passwordController.text, agreeToTerms: _isAgree);
 
-                                  // In SignupScreen's onPressed
-                                  final details = SignupDetails(
-                                    firstName: _firstNameController.text,
-                                    lastName: _lastNameController.text,
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                    agreeToTerms: _isAgree,
-                                  );
-
-                                  router.push('/otp/$email', extra: details);
+                                  // Call the new handler method
+                                  await _handleSignup(details);
                                 }
                               },
                               style: ElevatedButton.styleFrom(
