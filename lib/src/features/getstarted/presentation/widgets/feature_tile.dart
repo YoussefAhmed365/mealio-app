@@ -6,12 +6,7 @@ class FeatureTile extends StatelessWidget {
   final String title;
   final String subtitle;
 
-  const FeatureTile({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-  });
+  const FeatureTile({super.key, required this.icon, required this.title, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -24,21 +19,9 @@ class FeatureTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge
-                    ?.copyWith(fontWeight: FontWeight.w800),
-              ),
+              Text(title, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w800)),
               const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: secondaryTextColor, height: 1.5),
-              ),
+              Text(subtitle, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor, height: 1.5)),
             ],
           ),
         ),

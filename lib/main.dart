@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
 import 'package:mealio/src/core/router/app_router.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   runApp(const App());
 }
 
@@ -11,10 +14,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.themeData,
-      routerConfig: router,
-    );
+    return MaterialApp.router(debugShowCheckedModeBanner: false, theme: AppTheme.themeData, routerConfig: router);
   }
 }

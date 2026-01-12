@@ -23,10 +23,7 @@ class _GetstartedScreenState extends State<GetstartedScreen> {
   }
 
   void _nextPage() {
-    _pageController.nextPage(
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-    );
+    _pageController.nextPage(duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
   }
 
   @override
@@ -44,14 +41,11 @@ class _GetstartedScreenState extends State<GetstartedScreen> {
                   children: [
                     Text(
                       'Meal',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: primaryColor, fontWeight: FontWeight.w700),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: primaryColor, fontWeight: FontWeight.w700),
                     ),
                     Text(
                       '.io',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: Colors.brown[700],
-                          fontWeight: FontWeight.w700),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.brown[700], fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
@@ -65,11 +59,7 @@ class _GetstartedScreenState extends State<GetstartedScreen> {
                       duration: const Duration(milliseconds: 500),
                       height: 4.0,
                       margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                      decoration: BoxDecoration(
-                          color: _currentPage >= index
-                              ? primaryColor
-                              : secondaryTextColor?.withAlpha(77),
-                          borderRadius: BorderRadius.circular(2.0)),
+                      decoration: BoxDecoration(color: _currentPage >= index ? primaryColor : secondaryTextColor?.withAlpha(77), borderRadius: BorderRadius.circular(2.0)),
                     ),
                   );
                 }),

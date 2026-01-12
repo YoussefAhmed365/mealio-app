@@ -1,21 +1,20 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:mealio/src/core/router/app_router.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
-import 'package:mealio/src/features/authentication/presentation/models/signup_details.dart';
 
-// --- Best Practice: Centralize API constants ---
-// For a real app, use environment variables to store base URLs. [3, 9, 11, 15, 19]
-const String _apiBaseUrl = 'http://10.0.2.2:3000/api'; // Android emulator IP
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+String _apiBaseUrl = dotenv.env['API_BASE_URL']!;
 const String _verifyOtpEndpoint = '/verify-otp';
 const String _resendOtpEndpoint = '/resend-otp';
 
 class VerifyOTP extends StatefulWidget {
-  final String email;
-  // The signupDetails are no longer needed here if the backend handles all data persistence.
-  const VerifyOTP({super.key, required this.email, SignupDetails? signupDetails});
+  final String? email;
+  const VerifyOTP({super.key, this.email});
 
   @override
   State<VerifyOTP> createState() => _VerifyOTPState();
@@ -24,6 +23,7 @@ class VerifyOTP extends StatefulWidget {
 class _VerifyOTPState extends State<VerifyOTP> {
   late List<TextEditingController> _controllers;
   late List<FocusNode> _focusNodes;
+  late TextEditingController _emailController;
   bool _isOtpIncomplete = false;
   bool _isLoading = false;
 
@@ -37,6 +37,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
     super.initState();
     _controllers = List.generate(6, (_) => TextEditingController());
     _focusNodes = List.generate(6, (_) => FocusNode());
+    _emailController = TextEditingController(text: widget.email ?? '');
     startTimer();
   }
 
@@ -48,7 +49,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
     for (var focusNode in _focusNodes) {
       focusNode.dispose();
     }
-    _timer?.cancel(); // Important: cancel the timer to avoid memory leaks. [12]
+    _emailController.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -71,6 +73,17 @@ class _VerifyOTPState extends State<VerifyOTP> {
   /// --- API Call to Verify OTP ---
   Future<void> _verifyOtp() async {
     final String otp = _controllers.map((c) => c.text).join();
+    final String email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your email'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
 
     if (otp.length != 6) {
       setState(() => _isOtpIncomplete = true);
@@ -86,29 +99,35 @@ class _VerifyOTPState extends State<VerifyOTP> {
       final response = await http.post(
         Uri.parse('$_apiBaseUrl$_verifyOtpEndpoint'),
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
-        body: jsonEncode({'email': widget.email, 'otp': otp}),
+        body: jsonEncode({'email': email, 'otp': otp}),
       );
 
       if (mounted) {
         if (response.statusCode == 200) {
-          // Success! Navigate to the next screen (e.g., home or login).
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Verification Successful!'), backgroundColor: Colors.green),
+            const SnackBar(
+              content: Text('Verification Successful!'),
+              backgroundColor: Colors.green,
+            ),
           );
-          router.go('/login'); // Or wherever you want to navigate after success
+          router.go('/login');
         } else {
-          // Handle errors like invalid OTP (400) or expired OTP (409)
           final errorData = jsonDecode(response.body);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Verification Failed: ${errorData['message']}'), backgroundColor: Colors.red),
+            SnackBar(
+              content: Text('Verification Failed: ${errorData['message']}'),
+              backgroundColor: Colors.red,
+            ),
           );
         }
       }
     } catch (e) {
-      // Handle network errors
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('An error occurred. Please try again.'), backgroundColor: Colors.red),
+          const SnackBar(
+            content: Text('An error occurred. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -120,34 +139,54 @@ class _VerifyOTPState extends State<VerifyOTP> {
 
   /// --- API Call to Resend OTP ---
   Future<void> _resendCode() async {
+    final String email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your email'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
 
     try {
       final response = await http.post(
         Uri.parse('$_apiBaseUrl$_resendOtpEndpoint'),
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
-        body: jsonEncode({'email': widget.email}),
+        body: jsonEncode({'email': email}),
       );
 
       if (mounted) {
         final responseData = jsonDecode(response.body);
         if (response.statusCode == 200) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(responseData['message']), backgroundColor: Colors.blue),
+            SnackBar(
+              content: Text(responseData['message']),
+              backgroundColor: Colors.blue,
+            ),
           );
-          // Restart the timer
           _start = 60;
           startTimer();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${responseData['message']}'), backgroundColor: Colors.red),
+            SnackBar(
+              content: Text('Error: ${responseData['message']}'),
+              backgroundColor: Colors.red,
+            ),
           );
         }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('An error occurred. Please check your connection.'), backgroundColor: Colors.red),
+          const SnackBar(
+            content: Text('An error occurred. Please check your connection.'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -157,9 +196,6 @@ class _VerifyOTPState extends State<VerifyOTP> {
     }
   }
 
-  // No changes needed for _buildOtpField, _handlePaste.
-  // ... (Your existing _buildOtpField and _handlePaste methods)
-  // [The user's existing _buildOtpField and _handlePaste methods would go here]
   /// Builds a single OTP input field.
   Widget _buildOtpField(int index) {
     return SizedBox(
@@ -168,25 +204,27 @@ class _VerifyOTPState extends State<VerifyOTP> {
       child: TextField(
         controller: _controllers[index],
         focusNode: _focusNodes[index],
-        // Allow only numbers.
         keyboardType: TextInputType.number,
-        // Center the text.
         textAlign: TextAlign.center,
-        // Limit input to a single character.
         maxLength: 1,
         style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         decoration: InputDecoration(
-          // Hide the character counter.
           counterText: '',
           contentPadding: const EdgeInsets.all(12),
           border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide:
-              BorderSide(color: _isOtpIncomplete ? Colors.red : Colors.grey.shade400, width: _isOtpIncomplete ? 2 : 1)),
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: _isOtpIncomplete ? Colors.red : Colors.grey.shade400,
+              width: _isOtpIncomplete ? 2 : 1,
+            ),
+          ),
           enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide:
-              BorderSide(color: _isOtpIncomplete ? Colors.red : Colors.grey.shade400, width: _isOtpIncomplete ? 2 : 1)),
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: _isOtpIncomplete ? Colors.red : Colors.grey.shade400,
+              width: _isOtpIncomplete ? 2 : 1,
+            ),
+          ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: Colors.blue, width: 2),
@@ -197,22 +235,16 @@ class _VerifyOTPState extends State<VerifyOTP> {
           ),
         ),
         onChanged: (value) {
-          // First, check for a paste operation by seeing if the new value has more than one character.
           if (value.length > 1) {
             _handlePaste(value);
-            return; // Stop processing to prevent single-character logic from interfering.
+            return;
           }
-
-          // Handle single digit entry and move focus to the next field.
           if (value.isNotEmpty && index < 5) {
             FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
-            // If user starts typing, remove any existing error state.
             if (_isOtpIncomplete) {
               setState(() => _isOtpIncomplete = false);
             }
-          }
-          // Handle deleting a digit and move focus to the previous field.
-          else if (value.isEmpty && index > 0) {
+          } else if (value.isEmpty && index > 0) {
             FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
           }
         },
@@ -222,38 +254,32 @@ class _VerifyOTPState extends State<VerifyOTP> {
 
   /// Handles pasting a code into the OTP fields.
   void _handlePaste(String pastedText) {
-    // If the user pastes, clear any previous error state.
     if (_isOtpIncomplete) {
       setState(() => _isOtpIncomplete = false);
     }
 
-    // Sanitize the pasted text to only include digits, and trim to 6 characters.
     final String digitsOnly = pastedText.replaceAll(RegExp(r'[^0-9]'), '');
-    final String otpCode = digitsOnly.length > 6 ? digitsOnly.substring(0, 6) : digitsOnly;
+    final String otpCode = digitsOnly.length > 6
+        ? digitsOnly.substring(0, 6)
+        : digitsOnly;
 
-    // Distribute the sanitized digits across the OTP fields.
     for (int i = 0; i < otpCode.length; i++) {
       _controllers[i].text = otpCode[i];
     }
 
-    // Clear any remaining fields if the pasted code was less than 6 digits.
     for (int i = otpCode.length; i < 6; i++) {
       _controllers[i].clear();
     }
 
-    // Move focus appropriately after the paste.
     if (otpCode.isNotEmpty) {
       int focusIndex = otpCode.length - 1;
       if (focusIndex == 5) {
-        // If all fields are filled, unfocus to hide the keyboard for a better UX.
         FocusScope.of(context).unfocus();
       } else {
-        // Otherwise, focus the next empty field.
         FocusScope.of(context).requestFocus(_focusNodes[focusIndex + 1]);
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -262,13 +288,16 @@ class _VerifyOTPState extends State<VerifyOTP> {
         padding: const EdgeInsets.all(24.0),
         child: Stack(
           children: [
-            // ... (Your existing back button)
             Positioned(
               top: 30,
               left: 0,
               child: IconButton.outlined(
                 onPressed: () {
-                  router.go('/signup');
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  } else {
+                    router.go('/login');
+                  }
                 },
                 icon: const Icon(Icons.arrow_back),
                 iconSize: 26,
@@ -282,40 +311,50 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // ... (Your existing header Texts)
-                    Text('Verify Code', style: Theme
-                        .of(context)
-                        .textTheme
-                        .headlineLarge, textAlign: TextAlign.center),
+                    Text(
+                      'Verify Code',
+                      style: Theme.of(context).textTheme.headlineLarge,
+                      textAlign: TextAlign.center,
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       "Please enter the code we just sent to email",
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: secondaryTextColor),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: secondaryTextColor,
+                      ),
                       textAlign: TextAlign.center,
                     ),
-                    Text(
-                      widget.email,
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyLarge,
+                    const SizedBox(height: 16),
+                    // Replaced Text widget with TextField
+                    TextField(
+                      controller: _emailController,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                      ],
                       textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Enter your email",
+                      ),
                     ),
                     const SizedBox(height: 48),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(6, (index) => _buildOtpField(index)),
+                      children: List.generate(
+                        6,
+                        (index) => _buildOtpField(index),
+                      ),
                     ),
                     const SizedBox(height: 28),
-                    // --- Updated Resend Button Logic ---
                     TextButton(
-                      onPressed: _isResendButtonEnabled && !_isLoading ? _resendCode : null,
+                      onPressed: _isResendButtonEnabled && !_isLoading
+                          ? _resendCode
+                          : null,
                       child: Text(
-                        _isResendButtonEnabled ? 'Resend Code' : 'Resend Code in $_start s',
+                        _isResendButtonEnabled
+                            ? 'Resend Code'
+                            : 'Resend Code in $_start s',
                       ),
                     ),
                     const SizedBox(height: 28),
@@ -325,12 +364,22 @@ class _VerifyOTPState extends State<VerifyOTP> {
                         onPressed: _isLoading ? null : _verifyOtp,
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
                           backgroundColor: Colors.amber.shade800,
                         ),
                         child: _isLoading
-                            ? const CircularProgressIndicator(color: Colors.white)
-                            : const Text('Verify', style: TextStyle(fontSize: 18, color: Colors.white)),
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                'Verify',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
                       ),
                     ),
                   ],
@@ -343,10 +392,11 @@ class _VerifyOTPState extends State<VerifyOTP> {
     );
   }
 }
+
 // import 'package:flutter/material.dart';
 // import 'package:mealio/src/core/router/app_router.dart';
 // import 'package:mealio/src/core/theme/app_theme.dart';
-// import 'package:mealio/src/features/authentication/presentation/models/signup_details.dart';
+// import 'package:mealio/src/features/authentication/presentation/models/auth_details.dart';
 //
 // class VerifyOTP extends StatefulWidget {
 //   final String email;

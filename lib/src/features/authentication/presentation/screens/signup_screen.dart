@@ -1,12 +1,11 @@
-import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:http/http.dart' as http;
 import 'package:mealio/src/core/theme/app_theme.dart';
 import 'package:mealio/src/core/router/app_router.dart';
+import 'package:mealio/src/features/authentication/services/auth_service.dart';
 import '../widgets/custom_auth_textfield.dart';
-import '../models/signup_details.dart';
+import '../models/auth_details.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -23,14 +22,10 @@ class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  void _openTermsOfService() {
-    // Implement navigation to the Terms of Service screen or URL.
-    print('Navigating to Terms of Service...');
-  }
-
-  void _openPrivacyPolicy() {
-    // Implement navigation to the Privacy Policy screen or URL.
-    print('Navigating to Privacy Policy...');
+  VoidCallback _openLegalScreen(String navigate) {
+    return () {
+      router.push("/legal/$navigate");
+    };
   }
 
   @override
@@ -45,42 +40,35 @@ class _SignupScreenState extends State<SignupScreen> {
   // ------------------------------------------------
   // Handling Data Validation & Security With The API
   // ------------------------------------------------
-
-  // TODO: 1.In SignupScreen: After validating the form, make an API call to your backend with all the user details (firstName, lastName, email, password).
-  // TODO: 2.Backend Logic: The backend receives the data, hashes the password, creates a user account with a status "pending_verification", and then sends an OTP email to the user.
-  // TODO: 3.Navigation: After the API call is successful, navigate to the OTP screen, passing the user's email. We will need the uesr firstname, lastname, and email in the dashboard screen.
-  // TODO: 4.In VerifyOTP: The user enters the OTP. Your "Verify" button then makes a second API call to the backend with the email and the entered OTP. The backend verifies the code and, if correct, activates the user's account.
-  Future<void> _handleSignup(SignupDetails details) async {
-    // 1. Define API endpoint
-    final url = Uri.parse('http:/ocalhost:5000/api/users/register');
-
+  Future<void> _handleSignup(SignupCridentials details) async {
     try {
-      // 2. Make the POST request
-      final response = await http.post(url, headers: {'Content-Type': 'application/json; charset=UTF-8'}, body: jsonEncode({'firstName': details.firstName, 'lastName': details.lastName, 'email': details.email, 'password': details.password}));
+      final user = await AuthService().signup(
+        details.firstName,
+        details.lastName,
+        details.email,
+        details.password,
+      );
 
-      // 3. Handle the response
-      if (response.statusCode == 201) {
-        // 201 Created is a good practice for successful POSTs
+      if (user != null) {
         // Successful API call
-        print('Signup successful, navigating to OTP screen.');
         if (mounted) {
-          // Check if the widget is still in the tree
-          // Navigate to the OTP screen, passing the email
-          router.push('/otp/${details.email}');
+          router.go('/dashboard');
         }
       } else {
-        // The server returned an error (e.g., 400 for bad request, 409 for conflict/email exists)
-        final errorData = jsonDecode(response.body);
-        print('Signup failed: ${response.statusCode} - ${errorData['message']}');
+        // Unknown error (rarely reached due to exception throwing)
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Signup failed: ${errorData['message']}')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Signup failed: Unknown error')),
+          );
         }
       }
     } catch (e) {
-      // Handle network errors (e.g., no internet, server down). [2]
-      print('An error occurred: $e');
+      print('Signup failed: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('An error occurred. Please check your connection and try again.')));
+        final message = e.toString().replaceAll('Exception: ', '');
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Signup failed: $message')));
       }
     }
   }
@@ -99,11 +87,17 @@ class _SignupScreenState extends State<SignupScreen> {
                 children: [
                   Text(
                     'Meal',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: primaryColor, fontWeight: FontWeight.w700),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: primaryColor,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   Text(
                     '.io',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.brown[700], fontWeight: FontWeight.w700),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: Colors.brown[700],
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),
@@ -113,11 +107,16 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 100),
-                    Text("Create Account", style: Theme.of(context).textTheme.headlineLarge),
+                    Text(
+                      "Create Account",
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
                     const SizedBox(height: 10),
                     Text(
                       "Join us now and try Meal.io to see the magic in planning",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: secondaryTextColor,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 30),
@@ -131,7 +130,17 @@ class _SignupScreenState extends State<SignupScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("First Name", style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontVariations: <FontVariation>[FontVariation('wght', 700)])),
+                                    Text(
+                                      "First Name",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                            fontVariations: <FontVariation>[
+                                              FontVariation('wght', 700),
+                                            ],
+                                          ),
+                                    ),
                                     const SizedBox(height: 10),
                                     TextFormField(
                                       controller: _firstNameController,
@@ -143,17 +152,31 @@ class _SignupScreenState extends State<SignupScreen> {
                                       },
                                       decoration: InputDecoration(
                                         filled: true,
-                                        fillColor: Colors.grey.shade50,
+                                        fillColor: Colors.white,
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(12.0), bottomLeft: Radius.circular(12.0)),
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(12.0),
+                                            bottomLeft: Radius.circular(12.0),
+                                          ),
                                         ),
                                         enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(12.0), bottomLeft: Radius.circular(12.0)),
-                                          borderSide: BorderSide(color: Colors.grey.shade300),
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(12.0),
+                                            bottomLeft: Radius.circular(12.0),
+                                          ),
+                                          borderSide: BorderSide(
+                                            color: Colors.grey.shade300,
+                                          ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(12.0), bottomLeft: Radius.circular(12.0)),
-                                          borderSide: BorderSide(color: primaryColor ?? Colors.amber, width: 2.0),
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(12.0),
+                                            bottomLeft: Radius.circular(12.0),
+                                          ),
+                                          borderSide: BorderSide(
+                                            color: primaryColor ?? Colors.amber,
+                                            width: 2.0,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -165,7 +188,17 @@ class _SignupScreenState extends State<SignupScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("Last Name", style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontVariations: <FontVariation>[FontVariation('wght', 700)])),
+                                    Text(
+                                      "Last Name",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                            fontVariations: <FontVariation>[
+                                              FontVariation('wght', 700),
+                                            ],
+                                          ),
+                                    ),
                                     const SizedBox(height: 10),
                                     TextFormField(
                                       controller: _lastNameController,
@@ -177,17 +210,31 @@ class _SignupScreenState extends State<SignupScreen> {
                                       },
                                       decoration: InputDecoration(
                                         filled: true,
-                                        fillColor: Colors.grey.shade50,
+                                        fillColor: Colors.white,
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.only(topRight: Radius.circular(12.0), bottomRight: Radius.circular(12.0)),
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(12.0),
+                                            bottomRight: Radius.circular(12.0),
+                                          ),
                                         ),
                                         enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.only(topRight: Radius.circular(12.0), bottomRight: Radius.circular(12.0)),
-                                          borderSide: BorderSide(color: Colors.grey.shade300),
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(12.0),
+                                            bottomRight: Radius.circular(12.0),
+                                          ),
+                                          borderSide: BorderSide(
+                                            color: Colors.grey.shade300,
+                                          ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.only(topRight: Radius.circular(12.0), bottomRight: Radius.circular(12.0)),
-                                          borderSide: BorderSide(color: primaryColor ?? Colors.amber, width: 2.0),
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(12.0),
+                                            bottomRight: Radius.circular(12.0),
+                                          ),
+                                          borderSide: BorderSide(
+                                            color: primaryColor ?? Colors.amber,
+                                            width: 2.0,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -197,9 +244,16 @@ class _SignupScreenState extends State<SignupScreen> {
                             ],
                           ),
                           const SizedBox(height: 10),
-                          CustomAuthTextField(labelText: "Email", controller: _emailController),
+                          CustomAuthTextField(
+                            labelText: "Email",
+                            controller: _emailController,
+                          ),
                           const SizedBox(height: 10),
-                          CustomAuthTextField(labelText: "Password", controller: _passwordController, isPassword: true),
+                          CustomAuthTextField(
+                            labelText: "Password",
+                            controller: _passwordController,
+                            isPassword: true,
+                          ),
                           const SizedBox(height: 5),
                           FormField<bool>(
                             initialValue: _isAgree,
@@ -215,28 +269,61 @@ class _SignupScreenState extends State<SignupScreen> {
                                         state.didChange(_isAgree);
                                       });
                                     },
-                                    controlAffinity: ListTileControlAffinity.leading,
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
                                     activeColor: Colors.amber.shade800,
                                     title: RichText(
                                       text: TextSpan(
                                         text: "Agree with ",
-                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                              color: secondaryTextColor,
+                                            ),
                                         children: <TextSpan>[
                                           TextSpan(
                                             text: "Terms of Service",
-                                            style: TextStyle(color: Colors.amber.shade800, decoration: TextDecoration.underline, decorationColor: Colors.amber.shade800),
-                                            recognizer: TapGestureRecognizer()..onTap = _openTermsOfService,
+                                            style: TextStyle(
+                                              color: Colors.amber.shade800,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              decorationColor:
+                                                  Colors.amber.shade800,
+                                            ),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = _openLegalScreen(
+                                                "Terms",
+                                              ),
                                           ),
                                           const TextSpan(text: " & "),
                                           TextSpan(
                                             text: "Privacy Policy",
-                                            style: TextStyle(color: Colors.amber.shade800, decoration: TextDecoration.underline, decorationColor: Colors.amber.shade800),
-                                            recognizer: TapGestureRecognizer()..onTap = _openPrivacyPolicy,
+                                            style: TextStyle(
+                                              color: Colors.amber.shade800,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              decorationColor:
+                                                  Colors.amber.shade800,
+                                            ),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = _openLegalScreen(
+                                                "Privacy",
+                                              ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                    subtitle: state.hasError ? Text(state.errorText!, style: TextStyle(color: Theme.of(context).colorScheme.error)) : null,
+                                    subtitle: state.hasError
+                                        ? Text(
+                                            state.errorText!,
+                                            style: TextStyle(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.error,
+                                            ),
+                                          )
+                                        : null,
                                   ),
                                 ],
                               );
@@ -255,29 +342,53 @@ class _SignupScreenState extends State<SignupScreen> {
                               onPressed: () async {
                                 final form = _formKey.currentState!;
                                 if (form.validate()) {
-                                  final details = SignupDetails(firstName: _firstNameController.text, lastName: _lastNameController.text, email: _emailController.text, password: _passwordController.text, agreeToTerms: _isAgree);
+                                  final details = SignupCridentials(
+                                    firstName: _firstNameController.text,
+                                    lastName: _lastNameController.text,
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                    agreeToTerms: _isAgree,
+                                  );
 
                                   // Call the new handler method
                                   await _handleSignup(details);
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
                                 backgroundColor: Colors.amber.shade800,
                               ),
-                              child: const Text("Sign Up", style: TextStyle(fontSize: 18, color: Colors.white)),
+                              child: const Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 20),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Expanded(child: Divider(color: Colors.grey.shade400)),
+                              Expanded(
+                                child: Divider(color: Colors.grey.shade400),
+                              ),
                               const SizedBox(width: 10),
-                              Text("Or sign up with", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade400)),
+                              Text(
+                                "Or sign up with",
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(color: Colors.grey.shade400),
+                              ),
                               const SizedBox(width: 10),
-                              Expanded(child: Divider(color: Colors.grey.shade400)),
+                              Expanded(
+                                child: Divider(color: Colors.grey.shade400),
+                              ),
                             ],
                           ),
                           const SizedBox(height: 20),
@@ -286,23 +397,52 @@ class _SignupScreenState extends State<SignupScreen> {
                             children: [
                               IconButton.outlined(
                                 onPressed: () {},
-                                icon: SvgPicture.asset('assets/icons/google-icon.svg', width: 30, height: 30),
-                                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
-                                style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                                icon: SvgPicture.asset(
+                                  'assets/icons/google-icon.svg',
+                                  width: 30,
+                                  height: 30,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 15,
+                                  horizontal: 35,
+                                ),
+                                style: IconButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
                               ),
                               const SizedBox(width: 20),
                               IconButton.outlined(
                                 onPressed: () {},
-                                icon: SvgPicture.asset('assets/icons/microsoft-icon.svg', width: 30, height: 30),
-                                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
-                                style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                                icon: SvgPicture.asset(
+                                  'assets/icons/microsoft-icon.svg',
+                                  width: 30,
+                                  height: 30,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 15,
+                                  horizontal: 35,
+                                ),
+                                style: IconButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
                               ),
                               const SizedBox(width: 20),
                               IconButton.outlined(
                                 onPressed: () {},
                                 icon: const Icon(Icons.facebook, size: 30),
-                                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
-                                style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 15,
+                                  horizontal: 35,
+                                ),
+                                style: IconButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -317,7 +457,12 @@ class _SignupScreenState extends State<SignupScreen> {
                                 },
                                 child: Text(
                                   "Sign In",
-                                  style: TextStyle(color: Colors.amber.shade800, decoration: TextDecoration.underline, decorationThickness: 2, decorationColor: Colors.amber.shade800),
+                                  style: TextStyle(
+                                    color: Colors.amber.shade800,
+                                    decoration: TextDecoration.underline,
+                                    decorationThickness: 2,
+                                    decorationColor: Colors.amber.shade800,
+                                  ),
                                 ),
                               ),
                             ],

@@ -12,19 +12,15 @@ class StepTwo extends StatelessWidget {
       padding: const EdgeInsets.all(5.0),
       child: Column(
         children: [
-          Text('PLAN YOUR MEALS',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: primaryColor, fontFamily: 'Winslow')),
+          Text(
+            'PLAN YOUR MEALS',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: primaryColor, fontFamily: 'Winslow'),
+          ),
           const SizedBox(height: 8),
           Text(
             'Get Your Ideas Ready In Just A Minute With Generative AI!',
             textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontSize: 28, fontWeight: FontWeight.w800),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: 28, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 24),
           Container(
@@ -36,23 +32,11 @@ class StepTwo extends StatelessWidget {
             ),
             child: const Column(
               children: [
-                FeatureTile(
-                    icon: Icons.lightbulb_outline,
-                    title: 'Tell Us What You Like',
-                    subtitle:
-                    'We take the guesswork out of meal planning by intelligently interpreting your tastes.'),
+                FeatureTile(icon: Icons.lightbulb_outline, title: 'Tell Us What You Like', subtitle: 'We take the guesswork out of meal planning by intelligently interpreting your tastes.'),
                 SizedBox(height: 24),
-                FeatureTile(
-                    icon: Icons.tune,
-                    title: 'Set Your Preferences',
-                    subtitle:
-                    'Your plan, your rules. Customize based on dietary needs, budget, and more.'),
+                FeatureTile(icon: Icons.tune, title: 'Set Your Preferences', subtitle: 'Your plan, your rules. Customize based on dietary needs, budget, and more.'),
                 SizedBox(height: 24),
-                FeatureTile(
-                    icon: Icons.auto_awesome,
-                    title: 'Get AI-Powered Ideas',
-                    subtitle:
-                    'Meal.io acts as your personal culinary assistant. Simply ask for a meal plan.'),
+                FeatureTile(icon: Icons.auto_awesome, title: 'Get AI-Powered Ideas', subtitle: 'Meal.io acts as your personal culinary assistant. Simply ask for a meal plan.'),
               ],
             ),
           ),
@@ -61,16 +45,12 @@ class StepTwo extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryColor,
               minimumSize: const Size(double.infinity, 50),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
             onPressed: onNext,
             child: Text(
               'Next',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
             ),
           ),
         ],

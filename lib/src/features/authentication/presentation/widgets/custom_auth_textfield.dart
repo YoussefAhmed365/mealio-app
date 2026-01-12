@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
 
@@ -32,6 +33,9 @@ class _CustomAuthTextFieldState extends State<CustomAuthTextField> {
         if (widget.isPassword)
           TextFormField(
             controller: widget.controller,
+            inputFormatters: [
+              FilteringTextInputFormatter.deny(RegExp(r'\s')),
+            ],
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your ${widget.labelText}';
@@ -43,7 +47,7 @@ class _CustomAuthTextFieldState extends State<CustomAuthTextField> {
             obscureText: !_isPasswordShown,
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.grey.shade50,
+              fillColor: Colors.white,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.0),
@@ -71,6 +75,9 @@ class _CustomAuthTextFieldState extends State<CustomAuthTextField> {
         else
           TextFormField(
             controller: widget.controller,
+            inputFormatters: widget.labelText == "Email"
+                ? [FilteringTextInputFormatter.deny(RegExp(r'\s'))]
+                : null,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your ${widget.labelText}';
@@ -81,7 +88,7 @@ class _CustomAuthTextFieldState extends State<CustomAuthTextField> {
             },
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.grey.shade50,
+              fillColor: Colors.white,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.0),
