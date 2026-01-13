@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../presentation/models/user.dart';
 
 class AuthService {
@@ -12,6 +12,8 @@ class AuthService {
   }
 
   AuthService._internal();
+
+  final _storage = const FlutterSecureStorage();
 
   String? get baseUrl => dotenv.env['API_BASE_URL'];
 
@@ -99,9 +101,7 @@ class AuthService {
       // Ignore network error on logout, just clear local session
       print("Logout API call failed: $e");
     } finally {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('authToken');
-      await prefs.remove('user_data');
+      await _storage.delete(key: 'authToken');
     }
   }
 
@@ -129,17 +129,14 @@ class AuthService {
   }
 
   Future<void> _saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('authToken', token);
+    await _storage.write(key: 'authToken', value: token);
   }
 
   Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('authToken');
+    return await _storage.read(key: 'authToken');
   }
 
   Future<void> _saveUser(User user) async {
-    final prefs = await SharedPreferences.getInstance();
     // Serialize user to JSON string for storage
     // We might need toJson in User model.
     // For now, simpler to just re-fetch or rely on token.
