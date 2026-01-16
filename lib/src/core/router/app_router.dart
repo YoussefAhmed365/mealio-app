@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:mealio/src/features/authentication/presentation/models/user.dart';
+import 'package:mealio/src/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:mealio/src/features/getstarted/presentation/screens/get_started.dart';
 import 'package:mealio/src/features/authentication/presentation/screens/login_screen.dart';
-
 import 'package:mealio/src/features/authentication/presentation/screens/signup_screen.dart';
 import 'package:mealio/src/features/authentication/presentation/screens/verify_otp.dart';
 import 'package:mealio/src/features/dashboard/presentation/screens/home.dart';
@@ -20,14 +20,22 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const GetstartedScreen(),
     ),
     GoRoute(
-      path: '/login',
-      name: 'login',
-      builder: (context, state) => const LoginScreen(),
-    ),
-    GoRoute(
       path: '/signup',
       name: 'signup',
       builder: (context, state) => const SignupScreen(),
+    ),
+    GoRoute(
+      path: '/onboarding',
+      name: 'onboarding',
+      builder: (context, state) {
+        final user = state.extra as User;
+        return OnboardingScreen(user: user);
+      },
+    ),
+    GoRoute(
+      path: '/login',
+      name: 'login',
+      builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
       path: '/verify-otp',

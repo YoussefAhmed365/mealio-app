@@ -10,17 +10,9 @@ class LegalHome extends StatelessWidget {
       appBar: AppBar(title: const Text("Legal Information")),
       body: ListView(
         children: [
-          ListTile(
-            title: const Text("Privacy Policy"),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.push('/legal/Privacy'),
-          ),
+          ListTile(title: const Text("Privacy Policy"), trailing: const Icon(Icons.chevron_right), onTap: () => context.push('/legal/Privacy')),
           const Divider(height: 1),
-          ListTile(
-            title: const Text("Terms of Use"),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.push('/legal/Terms'),
-          ),
+          ListTile(title: const Text("Terms of Use"), trailing: const Icon(Icons.chevron_right), onTap: () => context.push('/legal/Terms')),
         ],
       ),
     );

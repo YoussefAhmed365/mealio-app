@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:mealio/src/core/router/app_router.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
+import 'package:mealio/src/core/widgets/button.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -76,12 +77,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
     final String email = _emailController.text.trim();
 
     if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your email'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter your email'), backgroundColor: Colors.red));
       return;
     }
 
@@ -96,39 +92,20 @@ class _VerifyOTPState extends State<VerifyOTP> {
     });
 
     try {
-      final response = await http.post(
-        Uri.parse('$_apiBaseUrl$_verifyOtpEndpoint'),
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
-        body: jsonEncode({'email': email, 'otp': otp}),
-      );
+      final response = await http.post(Uri.parse('$_apiBaseUrl$_verifyOtpEndpoint'), headers: {'Content-Type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email, 'otp': otp}));
 
       if (mounted) {
         if (response.statusCode == 200) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Verification Successful!'),
-              backgroundColor: Colors.green,
-            ),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Verification Successful!'), backgroundColor: Colors.green));
           router.go('/login');
         } else {
           final errorData = jsonDecode(response.body);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Verification Failed: ${errorData['message']}'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Verification Failed: ${errorData['message']}'), backgroundColor: Colors.red));
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('An error occurred. Please try again.'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('An error occurred. Please try again.'), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {
@@ -142,52 +119,28 @@ class _VerifyOTPState extends State<VerifyOTP> {
     final String email = _emailController.text.trim();
 
     if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your email'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter your email'), backgroundColor: Colors.red));
       return;
     }
 
     setState(() => _isLoading = true);
 
     try {
-      final response = await http.post(
-        Uri.parse('$_apiBaseUrl$_resendOtpEndpoint'),
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
-        body: jsonEncode({'email': email}),
-      );
+      final response = await http.post(Uri.parse('$_apiBaseUrl$_resendOtpEndpoint'), headers: {'Content-Type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
 
       if (mounted) {
         final responseData = jsonDecode(response.body);
         if (response.statusCode == 200) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(responseData['message']),
-              backgroundColor: Colors.blue,
-            ),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(responseData['message']), backgroundColor: Colors.blue));
           _start = 60;
           startTimer();
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: ${responseData['message']}'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${responseData['message']}'), backgroundColor: Colors.red));
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('An error occurred. Please check your connection.'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('An error occurred. Please check your connection.'), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {
@@ -213,17 +166,11 @@ class _VerifyOTPState extends State<VerifyOTP> {
           contentPadding: const EdgeInsets.all(12),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: _isOtpIncomplete ? Colors.red : Colors.grey.shade400,
-              width: _isOtpIncomplete ? 2 : 1,
-            ),
+            borderSide: BorderSide(color: _isOtpIncomplete ? Colors.red : Colors.grey.shade400, width: _isOtpIncomplete ? 2 : 1),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: _isOtpIncomplete ? Colors.red : Colors.grey.shade400,
-              width: _isOtpIncomplete ? 2 : 1,
-            ),
+            borderSide: BorderSide(color: _isOtpIncomplete ? Colors.red : Colors.grey.shade400, width: _isOtpIncomplete ? 2 : 1),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -259,9 +206,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
     }
 
     final String digitsOnly = pastedText.replaceAll(RegExp(r'[^0-9]'), '');
-    final String otpCode = digitsOnly.length > 6
-        ? digitsOnly.substring(0, 6)
-        : digitsOnly;
+    final String otpCode = digitsOnly.length > 6 ? digitsOnly.substring(0, 6) : digitsOnly;
 
     for (int i = 0; i < otpCode.length; i++) {
       _controllers[i].text = otpCode[i];
@@ -311,76 +256,30 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Verify Code',
-                      style: Theme.of(context).textTheme.headlineLarge,
-                      textAlign: TextAlign.center,
-                    ),
+                    Text('Verify Code', style: Theme.of(context).textTheme.headlineLarge, textAlign: TextAlign.center),
                     const SizedBox(height: 16),
                     Text(
                       "Please enter the code we just sent to email",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: secondaryTextColor,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
                     // Replaced Text widget with TextField
                     TextField(
                       controller: _emailController,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                      ],
+                      inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyLarge,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Enter your email",
-                      ),
+                      decoration: const InputDecoration(border: InputBorder.none, hintText: "Enter your email"),
                     ),
                     const SizedBox(height: 48),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(
-                        6,
-                        (index) => _buildOtpField(index),
-                      ),
-                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: List.generate(6, (index) => _buildOtpField(index))),
                     const SizedBox(height: 28),
-                    TextButton(
-                      onPressed: _isResendButtonEnabled && !_isLoading
-                          ? _resendCode
-                          : null,
-                      child: Text(
-                        _isResendButtonEnabled
-                            ? 'Resend Code'
-                            : 'Resend Code in $_start s',
-                      ),
-                    ),
+                    Button(type: ButtonType.text, onPressed: _isResendButtonEnabled && !_isLoading ? _resendCode : null, text: _isResendButtonEnabled ? 'Resend Code' : 'Resend Code in $_start s'),
                     const SizedBox(height: 28),
                     SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _isLoading ? null : _verifyOtp,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          backgroundColor: Colors.amber.shade800,
-                        ),
-                        child: _isLoading
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
-                              )
-                            : const Text(
-                                'Verify',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
-                      ),
+                      child: Button(onPressed: _isLoading ? null : _verifyOtp, text: 'Verify', isLoading: _isLoading),
                     ),
                   ],
                 ),

@@ -5,11 +5,7 @@ import 'package:mealio/src/features/legal/presentation/widgets/terms_of_use.dart
 
 class LegalScreen extends StatefulWidget {
   final String navigation;
-  final Map<String, Widget> legalScreens = {
-    "LegalHome": const LegalHome(),
-    "Privacy": const PrivacyPolicyScreen(),
-    "Terms": const TermsOfUseScreen(),
-  };
+  final Map<String, Widget> legalScreens = {"LegalHome": const LegalHome(), "Privacy": const PrivacyPolicyScreen(), "Terms": const TermsOfUseScreen()};
   LegalScreen({super.key, required this.navigation});
 
   @override
@@ -19,10 +15,6 @@ class LegalScreen extends StatefulWidget {
 class _LegalScreenState extends State<LegalScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body:
-          widget.legalScreens[widget.navigation] ??
-          widget.legalScreens['Privacy'],
-    );
+    return Scaffold(body: widget.legalScreens[widget.navigation] ?? widget.legalScreens['Privacy']);
   }
 }

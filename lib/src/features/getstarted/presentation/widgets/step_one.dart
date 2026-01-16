@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
+import 'package:mealio/src/core/widgets/button.dart';
 
 class StepOne extends StatelessWidget {
   final VoidCallback onNext;
@@ -63,20 +64,7 @@ class StepOne extends StatelessWidget {
           ),
           const SizedBox(height: 60), // Extra space for the card
           // --- Get Started Button ---
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryColor,
-              minimumSize: const Size(double.infinity, 50),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              elevation: 5,
-              shadowColor: primaryColor?.withAlpha(128),
-            ),
-            onPressed: onNext,
-            child: Text(
-              'Get Started',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
-            ),
-          ),
+          Button(text: 'Get Started', onPressed: onNext, elevation: 5),
         ],
       ),
     );

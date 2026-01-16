@@ -5,10 +5,6 @@ class TermsOfUseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-          child: Text("Terms of Use"),
-        )
-    );
+    return Scaffold(body: Center(child: Text("Terms of Use")));
   }
 }

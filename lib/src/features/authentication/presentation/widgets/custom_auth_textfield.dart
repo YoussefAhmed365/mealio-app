@@ -33,9 +33,7 @@ class _CustomAuthTextFieldState extends State<CustomAuthTextField> {
         if (widget.isPassword)
           TextFormField(
             controller: widget.controller,
-            inputFormatters: [
-              FilteringTextInputFormatter.deny(RegExp(r'\s')),
-            ],
+            inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your ${widget.labelText}';
@@ -75,9 +73,7 @@ class _CustomAuthTextFieldState extends State<CustomAuthTextField> {
         else
           TextFormField(
             controller: widget.controller,
-            inputFormatters: widget.labelText == "Email"
-                ? [FilteringTextInputFormatter.deny(RegExp(r'\s'))]
-                : null,
+            inputFormatters: widget.labelText == "Email" ? [FilteringTextInputFormatter.deny(RegExp(r'\s'))] : null,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your ${widget.labelText}';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
+import 'package:mealio/src/core/widgets/button.dart';
 import 'feature_tile.dart';
 
 class StepTwo extends StatelessWidget {
@@ -40,19 +41,8 @@ class StepTwo extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 32),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryColor,
-              minimumSize: const Size(double.infinity, 50),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-            onPressed: onNext,
-            child: Text(
-              'Next',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
-            ),
-          ),
+          const SizedBox(height: 75),
+          Button(text: 'Next', onPressed: onNext),
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
+import 'package:mealio/src/core/widgets/button.dart';
 
 class StepThree extends StatelessWidget {
   final VoidCallback onCreateAccount;
@@ -38,19 +39,8 @@ class StepThree extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   child: Image.asset('assets/images/getstarted2.webp', width: MediaQuery.of(context).size.width, height: 300, fit: BoxFit.cover),
                 ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    minimumSize: const Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  onPressed: onCreateAccount,
-                  child: Text(
-                    'Create Your Account',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
-                  ),
-                ),
+                const SizedBox(height: 64),
+                Button(text: 'Create Your Account', onPressed: onCreateAccount),
               ],
             ),
           ),

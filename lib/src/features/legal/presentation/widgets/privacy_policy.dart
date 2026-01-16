@@ -5,10 +5,6 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-          child: Text("Privacy Policy"),
-        )
-    );
+    return Scaffold(body: Center(child: Text("Privacy Policy")));
   }
 }

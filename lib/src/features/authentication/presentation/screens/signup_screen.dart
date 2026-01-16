@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
 import 'package:mealio/src/core/router/app_router.dart';
-import 'package:mealio/src/features/authentication/services/auth_service.dart';
+import 'package:mealio/src/core/widgets/button.dart';
+import 'package:mealio/src/core/services/auth_service.dart';
 import '../widgets/custom_auth_textfield.dart';
 import '../models/auth_details.dart';
 
@@ -17,6 +18,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isAgree = false;
+  bool _isLoading = false;
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -37,42 +39,6 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
-  // ------------------------------------------------
-  // Handling Data Validation & Security With The API
-  // ------------------------------------------------
-  Future<void> _handleSignup(SignupCridentials details) async {
-    try {
-      final user = await AuthService().signup(
-        details.firstName,
-        details.lastName,
-        details.email,
-        details.password,
-      );
-
-      if (user != null) {
-        // Successful API call
-        if (mounted) {
-          router.go('/dashboard');
-        }
-      } else {
-        // Unknown error (rarely reached due to exception throwing)
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Signup failed: Unknown error')),
-          );
-        }
-      }
-    } catch (e) {
-      print('Signup failed: $e');
-      if (mounted) {
-        final message = e.toString().replaceAll('Exception: ', '');
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Signup failed: $message')));
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,17 +53,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 children: [
                   Text(
                     'Meal',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: primaryColor,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: primaryColor, fontWeight: FontWeight.w700),
                   ),
                   Text(
                     '.io',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: Colors.brown[700],
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.brown[700], fontWeight: FontWeight.w700),
                   ),
                 ],
               ),
@@ -107,16 +67,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 100),
-                    Text(
-                      "Create Account",
-                      style: Theme.of(context).textTheme.headlineLarge,
-                    ),
+                    Text("Create Account", style: Theme.of(context).textTheme.headlineLarge),
                     const SizedBox(height: 10),
                     Text(
                       "Join us now and try Meal.io to see the magic in planning",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: secondaryTextColor,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 30),
@@ -130,17 +85,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "First Name",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                            fontVariations: <FontVariation>[
-                                              FontVariation('wght', 700),
-                                            ],
-                                          ),
-                                    ),
+                                    Text("First Name", style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontVariations: <FontVariation>[FontVariation('wght', 700)])),
                                     const SizedBox(height: 10),
                                     TextFormField(
                                       controller: _firstNameController,
@@ -154,29 +99,15 @@ class _SignupScreenState extends State<SignupScreen> {
                                         filled: true,
                                         fillColor: Colors.white,
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(12.0),
-                                            bottomLeft: Radius.circular(12.0),
-                                          ),
+                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(12.0), bottomLeft: Radius.circular(12.0)),
                                         ),
                                         enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(12.0),
-                                            bottomLeft: Radius.circular(12.0),
-                                          ),
-                                          borderSide: BorderSide(
-                                            color: Colors.grey.shade300,
-                                          ),
+                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(12.0), bottomLeft: Radius.circular(12.0)),
+                                          borderSide: BorderSide(color: Colors.grey.shade300),
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(12.0),
-                                            bottomLeft: Radius.circular(12.0),
-                                          ),
-                                          borderSide: BorderSide(
-                                            color: primaryColor ?? Colors.amber,
-                                            width: 2.0,
-                                          ),
+                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(12.0), bottomLeft: Radius.circular(12.0)),
+                                          borderSide: BorderSide(color: primaryColor ?? Colors.amber, width: 2.0),
                                         ),
                                       ),
                                     ),
@@ -188,17 +119,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "Last Name",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                            fontVariations: <FontVariation>[
-                                              FontVariation('wght', 700),
-                                            ],
-                                          ),
-                                    ),
+                                    Text("Last Name", style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontVariations: <FontVariation>[FontVariation('wght', 700)])),
                                     const SizedBox(height: 10),
                                     TextFormField(
                                       controller: _lastNameController,
@@ -212,29 +133,15 @@ class _SignupScreenState extends State<SignupScreen> {
                                         filled: true,
                                         fillColor: Colors.white,
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(12.0),
-                                            bottomRight: Radius.circular(12.0),
-                                          ),
+                                          borderRadius: BorderRadius.only(topRight: Radius.circular(12.0), bottomRight: Radius.circular(12.0)),
                                         ),
                                         enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(12.0),
-                                            bottomRight: Radius.circular(12.0),
-                                          ),
-                                          borderSide: BorderSide(
-                                            color: Colors.grey.shade300,
-                                          ),
+                                          borderRadius: BorderRadius.only(topRight: Radius.circular(12.0), bottomRight: Radius.circular(12.0)),
+                                          borderSide: BorderSide(color: Colors.grey.shade300),
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(12.0),
-                                            bottomRight: Radius.circular(12.0),
-                                          ),
-                                          borderSide: BorderSide(
-                                            color: primaryColor ?? Colors.amber,
-                                            width: 2.0,
-                                          ),
+                                          borderRadius: BorderRadius.only(topRight: Radius.circular(12.0), bottomRight: Radius.circular(12.0)),
+                                          borderSide: BorderSide(color: primaryColor ?? Colors.amber, width: 2.0),
                                         ),
                                       ),
                                     ),
@@ -244,16 +151,9 @@ class _SignupScreenState extends State<SignupScreen> {
                             ],
                           ),
                           const SizedBox(height: 10),
-                          CustomAuthTextField(
-                            labelText: "Email",
-                            controller: _emailController,
-                          ),
+                          CustomAuthTextField(labelText: "Email", controller: _emailController),
                           const SizedBox(height: 10),
-                          CustomAuthTextField(
-                            labelText: "Password",
-                            controller: _passwordController,
-                            isPassword: true,
-                          ),
+                          CustomAuthTextField(labelText: "Password", controller: _passwordController, isPassword: true),
                           const SizedBox(height: 5),
                           FormField<bool>(
                             initialValue: _isAgree,
@@ -269,61 +169,28 @@ class _SignupScreenState extends State<SignupScreen> {
                                         state.didChange(_isAgree);
                                       });
                                     },
-                                    controlAffinity:
-                                        ListTileControlAffinity.leading,
+                                    controlAffinity: ListTileControlAffinity.leading,
                                     activeColor: Colors.amber.shade800,
                                     title: RichText(
                                       text: TextSpan(
                                         text: "Agree with ",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                              color: secondaryTextColor,
-                                            ),
+                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
                                         children: <TextSpan>[
                                           TextSpan(
                                             text: "Terms of Service",
-                                            style: TextStyle(
-                                              color: Colors.amber.shade800,
-                                              decoration:
-                                                  TextDecoration.underline,
-                                              decorationColor:
-                                                  Colors.amber.shade800,
-                                            ),
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = _openLegalScreen(
-                                                "Terms",
-                                              ),
+                                            style: TextStyle(color: Colors.amber.shade800, decoration: TextDecoration.underline, decorationColor: Colors.amber.shade800),
+                                            recognizer: TapGestureRecognizer()..onTap = _openLegalScreen("Terms"),
                                           ),
                                           const TextSpan(text: " & "),
                                           TextSpan(
                                             text: "Privacy Policy",
-                                            style: TextStyle(
-                                              color: Colors.amber.shade800,
-                                              decoration:
-                                                  TextDecoration.underline,
-                                              decorationColor:
-                                                  Colors.amber.shade800,
-                                            ),
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = _openLegalScreen(
-                                                "Privacy",
-                                              ),
+                                            style: TextStyle(color: Colors.amber.shade800, decoration: TextDecoration.underline, decorationColor: Colors.amber.shade800),
+                                            recognizer: TapGestureRecognizer()..onTap = _openLegalScreen("Privacy"),
                                           ),
                                         ],
                                       ),
                                     ),
-                                    subtitle: state.hasError
-                                        ? Text(
-                                            state.errorText!,
-                                            style: TextStyle(
-                                              color: Theme.of(
-                                                context,
-                                              ).colorScheme.error,
-                                            ),
-                                          )
-                                        : null,
+                                    subtitle: state.hasError ? Text(state.errorText!, style: TextStyle(color: Theme.of(context).colorScheme.error)) : null,
                                   ),
                                 ],
                               );
@@ -338,57 +205,30 @@ class _SignupScreenState extends State<SignupScreen> {
                           const SizedBox(height: 20),
                           SizedBox(
                             width: double.infinity,
-                            child: ElevatedButton(
+                            child: Button(
+                              text: "Sign Up",
                               onPressed: () async {
                                 final form = _formKey.currentState!;
                                 if (form.validate()) {
-                                  final details = SignupCridentials(
-                                    firstName: _firstNameController.text,
-                                    lastName: _lastNameController.text,
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                    agreeToTerms: _isAgree,
-                                  );
-
-                                  // Call the new handler method
-                                  await _handleSignup(details);
+                                  final details = SignupCridentials(firstName: _firstNameController.text, lastName: _lastNameController.text, email: _emailController.text, password: _passwordController.text, agreeToTerms: _isAgree);
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  await AuthService().signup(details.firstName, details.lastName, details.email, details.password);
                                 }
                               },
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                backgroundColor: Colors.amber.shade800,
-                              ),
-                              child: const Text(
-                                "Sign Up",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
+                              isLoading: _isLoading,
                             ),
                           ),
                           const SizedBox(height: 20),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Expanded(
-                                child: Divider(color: Colors.grey.shade400),
-                              ),
+                              Expanded(child: Divider(color: Colors.grey.shade400)),
                               const SizedBox(width: 10),
-                              Text(
-                                "Or sign up with",
-                                style: Theme.of(context).textTheme.bodyMedium
-                                    ?.copyWith(color: Colors.grey.shade400),
-                              ),
+                              Text("Or sign up with", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade400)),
                               const SizedBox(width: 10),
-                              Expanded(
-                                child: Divider(color: Colors.grey.shade400),
-                              ),
+                              Expanded(child: Divider(color: Colors.grey.shade400)),
                             ],
                           ),
                           const SizedBox(height: 20),
@@ -397,52 +237,23 @@ class _SignupScreenState extends State<SignupScreen> {
                             children: [
                               IconButton.outlined(
                                 onPressed: () {},
-                                icon: SvgPicture.asset(
-                                  'assets/icons/google-icon.svg',
-                                  width: 30,
-                                  height: 30,
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 15,
-                                  horizontal: 35,
-                                ),
-                                style: IconButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
+                                icon: SvgPicture.asset('assets/icons/google-icon.svg', width: 30, height: 30),
+                                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+                                style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                               ),
                               const SizedBox(width: 20),
                               IconButton.outlined(
                                 onPressed: () {},
-                                icon: SvgPicture.asset(
-                                  'assets/icons/microsoft-icon.svg',
-                                  width: 30,
-                                  height: 30,
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 15,
-                                  horizontal: 35,
-                                ),
-                                style: IconButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
+                                icon: SvgPicture.asset('assets/icons/microsoft-icon.svg', width: 30, height: 30),
+                                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+                                style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                               ),
                               const SizedBox(width: 20),
                               IconButton.outlined(
                                 onPressed: () {},
                                 icon: const Icon(Icons.facebook, size: 30),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 15,
-                                  horizontal: 35,
-                                ),
-                                style: IconButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
+                                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+                                style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                               ),
                             ],
                           ),
@@ -451,19 +262,16 @@ class _SignupScreenState extends State<SignupScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text("Already have an account?"),
-                              TextButton(
+                              Button(
+                                type: ButtonType.text,
+                                text: "Sign In",
+                                fontSize: Theme.of(context).textTheme.labelLarge,
+                                isFullWidth: false,
                                 onPressed: () {
                                   router.go('/login');
                                 },
-                                child: Text(
-                                  "Sign In",
-                                  style: TextStyle(
-                                    color: Colors.amber.shade800,
-                                    decoration: TextDecoration.underline,
-                                    decorationThickness: 2,
-                                    decorationColor: Colors.amber.shade800,
-                                  ),
-                                ),
+                                textColor: Colors.amber.shade800,
+                                padding: EdgeInsets.zero,
                               ),
                             ],
                           ),
