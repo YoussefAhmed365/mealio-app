@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mealio/src/features/onboarding/data/onboarding_controller.dart';
+import 'package:mealio/src/features/onboarding/presentation/providers/onboarding_controller.dart';
 import 'package:mealio/src/features/onboarding/presentation/widgets/onboarding_step_layout.dart';
 import 'package:mealio/src/features/onboarding/presentation/widgets/option_button.dart';
 // import icon assets if needed, simplified to Icons.person for now

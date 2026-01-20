@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mealio/src/features/onboarding/data/onboarding_state.dart';
+import 'package:mealio/src/features/onboarding/presentation/providers/onboarding_state.dart';
 
 class OnboardingController extends ChangeNotifier {
   int _currentStep = 0;

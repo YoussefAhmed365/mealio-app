@@ -98,7 +98,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 setState(() {
                                   _isLoading = true;
                                 });
-                                await AuthService().login(credentials.email, credentials.password);
+                                final user = await AuthService().login(credentials.email, credentials.password);
+                                router.go('/home', extra: user);
                               }
                             },
                             isLoading: _isLoading,

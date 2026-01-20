@@ -25,7 +25,7 @@ class Button extends StatelessWidget {
     final effectiveShape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius));
 
     Widget buttonContent = isLoading
-        ? SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: type == ButtonType.primary ? Colors.white : (textColor ?? primaryColor), strokeWidth: 2))
+        ? SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: type == ButtonType.primary ? Colors.white : (textColor ?? AppColors.amber600), strokeWidth: 2))
         : Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +33,7 @@ class Button extends StatelessWidget {
               if (icon != null) ...[icon!, const SizedBox(width: 8)],
               Text(
                 text,
-                style: fontSize != null ? fontSize?.copyWith(color: textColor ?? (type == ButtonType.primary ? Colors.white : primaryColor)) : TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: textColor ?? (type == ButtonType.primary ? Colors.white : primaryColor)),
+                style: fontSize != null ? fontSize?.copyWith(color: textColor ?? (type == ButtonType.primary ? Colors.white : AppColors.amber600)) : TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: textColor ?? (type == ButtonType.primary ? Colors.white : AppColors.amber600)),
               ),
             ],
           );
@@ -44,7 +44,7 @@ class Button extends StatelessWidget {
       case ButtonType.primary:
         buttonWidget = ElevatedButton(
           onPressed: isLoading ? null : onPressed,
-          style: ElevatedButton.styleFrom(padding: effectivePadding, shape: effectiveShape, backgroundColor: backgroundColor ?? primaryColor, elevation: elevation),
+          style: ElevatedButton.styleFrom(padding: effectivePadding, shape: effectiveShape, backgroundColor: backgroundColor ?? AppColors.amber600, elevation: elevation),
           child: buttonContent,
         );
         break;
@@ -54,7 +54,7 @@ class Button extends StatelessWidget {
           style: OutlinedButton.styleFrom(
             padding: effectivePadding,
             shape: effectiveShape,
-            side: BorderSide(color: backgroundColor ?? primaryColor ?? Colors.amber),
+            side: BorderSide(color: backgroundColor ?? AppColors.amber600 ?? Colors.amber),
             elevation: elevation,
           ),
           child: buttonContent,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mealio/src/core/router/app_router.dart';
 import 'package:mealio/src/core/services/auth_service.dart';
-import 'package:mealio/src/features/authentication/presentation/models/user.dart';
-import 'package:mealio/src/features/onboarding/data/onboarding_controller.dart';
+import 'package:mealio/src/features/authentication/domain/entities/user.dart';
+import 'package:mealio/src/features/onboarding/presentation/providers/onboarding_controller.dart';
 import 'package:mealio/src/features/onboarding/presentation/widgets/budget_step.dart';
 import 'package:mealio/src/features/onboarding/presentation/widgets/dietary_preferences_step.dart';
 import 'package:mealio/src/features/onboarding/presentation/widgets/food_allergies_step.dart';
@@ -11,7 +11,7 @@ import 'package:mealio/src/features/onboarding/presentation/widgets/step_indicat
 import 'package:mealio/src/features/onboarding/presentation/widgets/tracking_option_step.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  final User user;
+  final UserEntity user;
 
   const OnboardingScreen({super.key, required this.user});
 

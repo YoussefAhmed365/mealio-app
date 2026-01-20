@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../features/authentication/presentation/models/user.dart';
+import '../../features/authentication/data/models/user_model.dart';
+import '../../features/authentication/domain/entities/user.dart';
 import 'package:mealio/src/core/router/app_router.dart';
 
 class AuthService {
@@ -21,7 +22,7 @@ class AuthService {
   String? get baseUrl => dotenv.env['API_BASE_URL'];
 
   // Login
-  Future<User?> login(String email, String password) async {
+  Future<UserEntity?> login(String email, String password) async {
     if (baseUrl == null) throw Exception("API_BASE_URL not set");
 
     final url = Uri.parse('$baseUrl/users/login');
@@ -39,11 +40,9 @@ class AuthService {
 
       // Fetch user profile
       if (responseData != null) {
-        final user = User.fromJson(responseData);
+        final user = UserModel.fromJson(responseData);
         return user;
       }
-
-      router.go('/home');
     } else {
       final errorData = jsonDecode(response.body);
       throw Exception(errorData['message'] ?? 'Login failed');
@@ -52,7 +51,7 @@ class AuthService {
   }
 
   // Signup
-  Future<User?> signup(
+  Future<UserEntity?> signup(
     String firstname,
     String lastname,
     String email,
@@ -78,7 +77,7 @@ class AuthService {
       if (token != null) await _saveToken(token);
 
       if (responseData != null) {
-        final user = User.fromJson(responseData);
+        final user = UserModel.fromJson(responseData);
         router.go('/onboarding', extra: user);
         return null;
       }
@@ -107,7 +106,7 @@ class AuthService {
   }
 
   // Fetch user profile
-  Future<User?> getUserProfile() async {
+  Future<UserEntity?> getUserProfile() async {
     if (baseUrl == null) throw Exception("API_BASE_URL not set");
 
     final token = await getToken();
@@ -128,7 +127,7 @@ class AuthService {
 
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
-      return User.fromJson(responseData);
+      return UserModel.fromJson(responseData);
     }
     return null;
   }

@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:mealio/src/features/authentication/presentation/models/user.dart';
+import 'package:mealio/src/features/authentication/domain/entities/user.dart';
 import 'package:mealio/src/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:mealio/src/features/getstarted/presentation/screens/get_started.dart';
 import 'package:mealio/src/features/authentication/presentation/screens/login_screen.dart';
@@ -28,7 +28,7 @@ final GoRouter router = GoRouter(
       path: '/onboarding',
       name: 'onboarding',
       builder: (context, state) {
-        final user = state.extra as User;
+        final user = state.extra as UserEntity;
         return OnboardingScreen(user: user);
       },
     ),
@@ -57,7 +57,47 @@ final GoRouter router = GoRouter(
       path: '/home',
       name: 'home',
       builder: (context, state) {
-        final user = state.extra as User;
+        final user = state.extra as UserEntity;
+        return HomeScreen(user: user);
+      },
+    ),
+    GoRoute(
+      path: '/plans',
+      name: 'Weekly Plans',
+      builder: (context, state) {
+        final user = state.extra as UserEntity;
+        return HomeScreen(user: user);
+      },
+    ),
+    GoRoute(
+      path: '/recipes',
+      name: 'Recipes',
+      builder: (context, state) {
+        final user = state.extra as UserEntity;
+        return HomeScreen(user: user);
+      },
+    ),
+    GoRoute(
+      path: '/shoping-list',
+      name: 'Shopping List',
+      builder: (context, state) {
+        final user = state.extra as UserEntity;
+        return HomeScreen(user: user);
+      },
+    ),
+    GoRoute(
+      path: '/discover',
+      name: 'Discover Recipes',
+      builder: (context, state) {
+        final user = state.extra as UserEntity;
+        return HomeScreen(user: user);
+      },
+    ),
+    GoRoute(
+      path: '/analysis',
+      name: 'Nutrition Analysis',
+      builder: (context, state) {
+        final user = state.extra as UserEntity;
         return HomeScreen(user: user);
       },
     ),
