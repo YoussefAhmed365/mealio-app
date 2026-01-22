@@ -16,6 +16,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
+  bool _remember = false;
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -41,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Text(
                   'Meal',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: primaryColor, fontWeight: FontWeight.w700),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColors.amber600, fontWeight: FontWeight.w700),
                 ),
                 Text(
                   '.io',
@@ -71,20 +72,46 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 20),
                         CustomAuthTextField(labelText: "Password", controller: _passwordController, isPassword: true),
                         const SizedBox(height: 10),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Button(
-                            type: ButtonType.text,
-                            text: "Forgot Password?",
-                            fontSize: Theme.of(context).textTheme.labelLarge,
-                            isFullWidth: false,
-                            onPressed: () {
-                              final email = _emailController.text.trim();
-                              router.push('/verify-otp', extra: email);
-                            },
-                            textColor: Colors.amber.shade800,
-                            padding: EdgeInsets.zero,
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FormField<bool>(
+                                initialValue: _remember,
+                                builder: (state) {
+                                  return CheckboxListTile(
+                                    value: _remember,
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        _remember = value ?? false;
+                                        state.didChange(_remember);
+                                      });
+                                    },
+                                    controlAffinity: ListTileControlAffinity.leading,
+                                    activeColor: AppColors.amber600,
+                                    contentPadding: EdgeInsets.zero,
+                                    title: RichText(
+                                      text: TextSpan(
+                                        text: "Remember me",
+                                        style: Theme.of(context).textTheme.bodyMedium,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            Button(
+                              type: ButtonType.text,
+                              text: "Forgot Password?",
+                              fontSize: Theme.of(context).textTheme.labelLarge,
+                              isFullWidth: false,
+                              onPressed: () {
+                                final email = _emailController.text.trim();
+                                router.push('/verify-otp', extra: email);
+                              },
+                              textColor: Colors.amber.shade800,
+                              padding: EdgeInsets.zero,
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 30),
                         SizedBox(
@@ -94,11 +121,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () async {
                               final form = _formKey.currentState!;
                               if (form.validate()) {
-                                final credentials = SigninCridentials(email: _emailController.text, password: _passwordController.text);
+                                final credentials = SigninCridentials(email: _emailController.text, password: _passwordController.text, remember: _remember);
                                 setState(() {
                                   _isLoading = true;
                                 });
-                                final user = await AuthService().login(credentials.email, credentials.password);
+                                final user = await AuthService().login(credentials.email, credentials.password, credentials.remember);
                                 router.go('/home', extra: user);
                               }
                             },

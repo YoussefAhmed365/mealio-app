@@ -19,24 +19,27 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-        margin: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: AppColors.amber600,
-          borderRadius: const BorderRadius.all(Radius.circular(12)),
+          borderRadius: const BorderRadius.all(Radius.circular(30)),
           boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(0, 20), blurRadius: 20)],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List.generate(
             links.length,
-                (index) =>
-            (IconButton(
+            (index) => IconButton(
               onPressed: () {
-                router.pushNamed(links[index]["route"] as String);
+                router.goNamed(links[index]["route"] as String);
               },
-              icon: Icon((links[index]["route"] == currentPageRoute ? links[index]["activeIcon"] : links[index]["icon"]) as IconData?, color: Colors.white, size: 26,),
-            )),
+              icon: Container(
+                padding: EdgeInsets.all(8),
+                decoration: (links[index]["route"] == currentPageRoute) ? BoxDecoration(color: AppColors.amber100, shape: BoxShape.circle) : null,
+                child: Icon((links[index]["route"] == currentPageRoute ? links[index]["activeIcon"] : links[index]["icon"]) as IconData, color: (links[index]["route"] == currentPageRoute) ? AppColors.amber500 : Colors.white, size: 26),
+              ),
+            ),
           ),
         ),
       ),

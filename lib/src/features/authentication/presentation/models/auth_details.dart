@@ -17,8 +17,9 @@ class SignupCridentials {
 class SigninCridentials {
   final String email;
   final String password;
+  final bool remember;
 
-  SigninCridentials({required this.email, required this.password});
+  SigninCridentials({required this.email, required this.password, required this.remember});
 
   Map<String, dynamic> toJson() {
     return {'email': email, 'password': password};

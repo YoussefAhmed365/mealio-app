@@ -22,14 +22,14 @@ class AuthService {
   String? get baseUrl => dotenv.env['API_BASE_URL'];
 
   // Login
-  Future<UserEntity?> login(String email, String password) async {
+  Future<UserEntity?> login(String email, String password, bool remember) async {
     if (baseUrl == null) throw Exception("API_BASE_URL not set");
 
     final url = Uri.parse('$baseUrl/users/login');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
-      body: jsonEncode({'email': email, 'password': password}),
+      body: jsonEncode({'email': email, 'password': password, 'remember': remember}),
     );
 
     if (response.statusCode == 200) {

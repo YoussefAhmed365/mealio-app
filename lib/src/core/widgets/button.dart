@@ -54,7 +54,7 @@ class Button extends StatelessWidget {
           style: OutlinedButton.styleFrom(
             padding: effectivePadding,
             shape: effectiveShape,
-            side: BorderSide(color: backgroundColor ?? AppColors.amber600 ?? Colors.amber),
+            side: BorderSide(color: backgroundColor ?? AppColors.amber600),
             elevation: elevation,
           ),
           child: buttonContent,

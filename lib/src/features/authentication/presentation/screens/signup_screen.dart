@@ -170,7 +170,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       });
                                     },
                                     controlAffinity: ListTileControlAffinity.leading,
-                                    activeColor: Colors.amber.shade800,
+                                    activeColor: AppColors.amber500,
                                     title: RichText(
                                       text: TextSpan(
                                         text: "Agree with ",
@@ -178,13 +178,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                         children: <TextSpan>[
                                           TextSpan(
                                             text: "Terms of Service",
-                                            style: TextStyle(color: Colors.amber.shade800, decoration: TextDecoration.underline, decorationColor: Colors.amber.shade800),
+                                            style: TextStyle(color: AppColors.amber600, decoration: TextDecoration.underline, decorationColor: AppColors.amber600),
                                             recognizer: TapGestureRecognizer()..onTap = _openLegalScreen("Terms"),
                                           ),
                                           const TextSpan(text: " & "),
                                           TextSpan(
                                             text: "Privacy Policy",
-                                            style: TextStyle(color: Colors.amber.shade800, decoration: TextDecoration.underline, decorationColor: Colors.amber.shade800),
+                                            style: TextStyle(color: AppColors.amber600, decoration: TextDecoration.underline, decorationColor: AppColors.amber600),
                                             recognizer: TapGestureRecognizer()..onTap = _openLegalScreen("Privacy"),
                                           ),
                                         ],
@@ -270,7 +270,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 onPressed: () {
                                   router.go('/login');
                                 },
-                                textColor: Colors.amber.shade800,
+                                textColor: AppColors.amber500,
                                 padding: EdgeInsets.zero,
                               ),
                             ],
