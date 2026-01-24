@@ -117,8 +117,8 @@ class Button extends StatelessWidget {
             elevation: elevation,
             shadowColor: shadowColor, // Apply shadow color
             side: borderSide,
-            disabledBackgroundColor: effectiveBackgroundColor.withOpacity(onPressed == null ? 0.5 : 1.0),
-            disabledForegroundColor: effectiveForegroundColor.withOpacity(0.6),
+            disabledBackgroundColor: effectiveBackgroundColor.withAlpha(onPressed == null ? 128 : 255),
+            disabledForegroundColor: effectiveForegroundColor.withAlpha(153),
           ),
           child: buttonContent,
         );
@@ -134,12 +134,12 @@ class Button extends StatelessWidget {
             side: borderSide,
             elevation: elevation,
             shadowColor: shadowColor, // Apply shadow color (visible if elevation > 0)
-            disabledForegroundColor: effectiveForegroundColor.withOpacity(0.6),
+            disabledForegroundColor: effectiveForegroundColor.withAlpha(153),
           ).copyWith(
-            side: MaterialStateProperty.resolveWith((states) {
+            side: WidgetStateProperty.resolveWith((states) {
               Color targetColor = effectiveBorderColor ?? effectiveBackgroundColor;
-              if (states.contains(MaterialState.disabled)) {
-                return BorderSide(color: targetColor.withOpacity(0.3), width: effectiveBorderWidth);
+              if (states.contains(WidgetState.disabled)) {
+                return BorderSide(color: targetColor.withAlpha(77), width: effectiveBorderWidth);
               }
               return BorderSide(color: targetColor, width: effectiveBorderWidth);
             }),
@@ -158,7 +158,7 @@ class Button extends StatelessWidget {
             side: borderSide,
             elevation: elevation, // Usually 0 for text buttons, but can be set
             shadowColor: shadowColor, // Apply shadow color
-            disabledForegroundColor: effectiveForegroundColor.withOpacity(0.6),
+            disabledForegroundColor: effectiveForegroundColor.withAlpha(153),
           ),
           child: buttonContent,
         );
