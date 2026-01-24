@@ -214,7 +214,23 @@ class _SignupScreenState extends State<SignupScreen> {
                                   setState(() {
                                     _isLoading = true;
                                   });
-                                  await AuthService().signup(details.firstName, details.lastName, details.email, details.password);
+                                  try {
+                                    await AuthService().signup(details.firstName, details.lastName, details.email, details.password);
+                                  } on Exception catch (e) {
+                                    final errorMessage = e.toString().replaceFirst('Exception: ', '');
+                                    if (mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(errorMessage),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    }
+                                  } finally {
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+                                  }
                                 }
                               },
                               isLoading: _isLoading,

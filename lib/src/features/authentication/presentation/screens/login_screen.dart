@@ -125,8 +125,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                 setState(() {
                                   _isLoading = true;
                                 });
-                                final user = await AuthService().login(credentials.email, credentials.password, credentials.remember);
-                                router.go('/home', extra: user);
+                                try {
+                                  final user = await AuthService().login(credentials.email, credentials.password, credentials.remember);
+                                  if (user != null && mounted) {
+                                    router.go('/home', extra: user);
+                                  }
+                                } on Exception catch (e) {
+                                  final errorMessage = e.toString().replaceFirst('Exception: ', '');
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(errorMessage),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  }
+                                } finally {
+                                  setState(() {
+                                  _isLoading = false;
+                                  });
+                                }
                               }
                             },
                             isLoading: _isLoading,
