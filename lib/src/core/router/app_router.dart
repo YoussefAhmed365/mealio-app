@@ -4,7 +4,10 @@ import 'package:mealio/src/features/onboarding/presentation/screens/onboarding_s
 import 'package:mealio/src/features/getstarted/presentation/screens/get_started.dart';
 import 'package:mealio/src/features/authentication/presentation/screens/login_screen.dart';
 import 'package:mealio/src/features/authentication/presentation/screens/signup_screen.dart';
-import 'package:mealio/src/features/authentication/presentation/screens/verify_otp.dart';
+import 'package:mealio/src/features/authentication/presentation/screens/verify_otp_screen.dart';
+import 'package:mealio/src/features/authentication/presentation/screens/reset_password_screen.dart';
+import 'package:mealio/src/features/authentication/presentation/screens/confirm_email_screen.dart';
+import 'package:mealio/src/features/authentication/presentation/screens/reset_screen.dart';
 import 'package:mealio/src/features/dashboard/presentation/screens/home.dart';
 import 'package:mealio/src/features/legal/presentation/screens/legal.dart';
 
@@ -38,11 +41,37 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
+      path: '/reset-screen',
+      name: 'reset',
+      builder: (context, state) {
+        final email = state.extra as String?;
+        return ResetScreen(email: email);
+      },
+    ),
+    GoRoute(
+      path: '/confirm-email-reset',
+      name: 'confirm-email',
+      builder: (context, state) {
+        final email = state.extra as String?;
+        return ConfirmEmailScreen(email: email);
+      },
+    ),
+    GoRoute(
       path: '/verify-otp',
       name: 'otp',
       builder: (context, state) {
-        final email = state.extra as String?;
+        final email = state.extra as String;
         return VerifyOTP(email: email);
+      },
+    ),
+    GoRoute(
+      path: '/reset-password',
+      name: 'reset-password',
+      builder: (context, state) {
+        final map = state.extra as Map<String, dynamic>;
+        final email = map['email'] as String;
+        final otp = map['otp'] as String;
+        return ResetPasswordScreen(email: email, otp: otp);
       },
     ),
     GoRoute(

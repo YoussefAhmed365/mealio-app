@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heroicons/heroicons.dart';
 import 'package:mealio/src/core/theme/app_theme.dart';
 import 'package:mealio/src/core/widgets/button.dart';
 import 'feature_tile.dart';
@@ -15,13 +16,19 @@ class StepTwo extends StatelessWidget {
         children: [
           Text(
             'PLAN YOUR MEALS',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: primaryColor, fontFamily: 'Winslow'),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: primaryColor,
+              fontFamily: 'Winslow',
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             'Get Your Ideas Ready In Just A Minute With Generative AI!',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: 28, fontWeight: FontWeight.w800),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+            ),
           ),
           const SizedBox(height: 24),
           Container(
@@ -29,15 +36,32 @@ class StepTwo extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(24),
-              boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 15)],
+              boxShadow: [
+                BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 15),
+              ],
             ),
             child: const Column(
               children: [
-                FeatureTile(icon: Icons.lightbulb_outline, title: 'Tell Us What You Like', subtitle: 'We take the guesswork out of meal planning by intelligently interpreting your tastes.'),
+                FeatureTile(
+                  icon: HeroIcons.lightBulb,
+                  title: 'Tell Us What You Like',
+                  subtitle:
+                      'We take the guesswork out of meal planning by intelligently interpreting your tastes.',
+                ),
                 SizedBox(height: 24),
-                FeatureTile(icon: Icons.tune, title: 'Set Your Preferences', subtitle: 'Your plan, your rules. Customize based on dietary needs, budget, and more.'),
+                FeatureTile(
+                  icon: HeroIcons.adjustmentsVertical,
+                  title: 'Set Your Preferences',
+                  subtitle:
+                      'Your plan, your rules. Customize based on dietary needs, budget, and more.',
+                ),
                 SizedBox(height: 24),
-                FeatureTile(icon: Icons.auto_awesome, title: 'Get AI-Powered Ideas', subtitle: 'Meal.io acts as your personal culinary assistant. Simply ask for a meal plan.'),
+                FeatureTile(
+                  icon: HeroIcons.sparkles,
+                  title: 'Get AI-Powered Ideas',
+                  subtitle:
+                      'Meal.io acts as your personal culinary assistant. Simply ask for a meal plan.',
+                ),
               ],
             ),
           ),

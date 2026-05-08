@@ -167,21 +167,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             IconButton.outlined(
                               onPressed: () {},
-                              icon: SvgPicture.asset('assets/icons/google-icon.svg', width: 30, height: 30),
+                              icon: SvgPicture.asset('assets/icons/google.svg', width: 30, height: 30),
                               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
                               style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                             ),
                             const SizedBox(width: 20),
                             IconButton.outlined(
                               onPressed: () {},
-                              icon: SvgPicture.asset('assets/icons/microsoft-icon.svg', width: 30, height: 30),
+                              icon: SvgPicture.asset('assets/icons/microsoft.svg', width: 30, height: 30),
                               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
                               style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                             ),
                             const SizedBox(width: 20),
                             IconButton.outlined(
                               onPressed: () {},
-                              icon: const Icon(Icons.facebook, size: 30),
+                              icon: SvgPicture.asset('assets/icons/facebook.svg', width: 30, height: 30),
                               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
                               style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                             ),

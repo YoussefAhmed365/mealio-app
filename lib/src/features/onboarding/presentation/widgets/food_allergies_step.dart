@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mealio/src/features/onboarding/presentation/providers/onboarding_controller.dart';
 import 'package:mealio/src/features/onboarding/presentation/widgets/onboarding_step_layout.dart';
 import 'package:mealio/src/features/onboarding/presentation/widgets/option_button.dart';
-// import icon assets if needed, simplified to Icons.person for now
+import 'package:heroicons/heroicons.dart';
 
 class FoodAllergiesStep extends StatefulWidget {
   final OnboardingController controller;
@@ -70,8 +70,8 @@ class _FoodAllergiesStepState extends State<FoodAllergiesStep> {
                                   color: Colors.amber.shade50,
                                   shape: BoxShape.circle,
                                 ),
-                                child: Icon(
-                                  Icons.person,
+                                child: HeroIcon(
+                                  HeroIcons.user,
                                   color: Colors.amber.shade800,
                                 ),
                               ),
@@ -104,10 +104,10 @@ class _FoodAllergiesStepState extends State<FoodAllergiesStep> {
                                   ],
                                 ),
                               ),
-                              Icon(
+                              HeroIcon(
                                 isOpen
-                                    ? Icons.keyboard_arrow_up
-                                    : Icons.keyboard_arrow_down,
+                                    ? HeroIcons.chevronUp
+                                    : HeroIcons.chevronDown,
                                 color: Colors.grey.shade400,
                               ),
                             ],

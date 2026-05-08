@@ -22,14 +22,22 @@ class AuthService {
   String? get baseUrl => dotenv.env['API_BASE_URL'];
 
   // Login
-  Future<UserEntity?> login(String email, String password, bool remember) async {
+  Future<UserEntity?> login(
+    String email,
+    String password,
+    bool remember,
+  ) async {
     if (baseUrl == null) throw Exception("API_BASE_URL not set");
 
     final url = Uri.parse('$baseUrl/users/login');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
-      body: jsonEncode({'email': email, 'password': password, 'remember': remember}),
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+        'remember': remember,
+      }),
     );
 
     if (response.statusCode == 200) {
@@ -130,6 +138,65 @@ class AuthService {
       return UserModel.fromJson(responseData);
     }
     return null;
+  }
+
+  // Send OTP
+  Future<void> sendOtp(String email) async {
+    if (baseUrl == null) throw Exception("API_BASE_URL not set");
+
+    final url = Uri.parse('$baseUrl/users/send-otp');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      body: jsonEncode({'email': email}),
+    );
+
+    if (response.statusCode != 200) {
+      final errorData = jsonDecode(response.body);
+      throw Exception(errorData['message'] ?? 'Failed to send OTP');
+    }
+  }
+
+  // Verify OTP
+  Future<void> verifyOtp(String email, String otp) async {
+    if (baseUrl == null) throw Exception("API_BASE_URL not set");
+
+    final url = Uri.parse('$baseUrl/users/verify-otp');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      body: jsonEncode({'email': email, 'otp': otp}),
+    );
+
+    if (response.statusCode != 200) {
+      final errorData = jsonDecode(response.body);
+      throw Exception(errorData['message'] ?? 'Invalid OTP');
+    }
+  }
+
+  // Reset Password
+  Future<void> resetPassword(
+    String email,
+    String otp,
+    String newPassword,
+  ) async {
+    if (baseUrl == null) throw Exception("API_BASE_URL not set");
+
+    final url = Uri.parse('$baseUrl/users/reset-password');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      body: jsonEncode({
+        'email': email,
+        'otp': otp,
+        'newPassword': newPassword,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      final errorData = jsonDecode(response.body);
+      throw Exception(errorData['message'] ?? 'Failed to reset password');
+    }
   }
 
   // Save Preferences

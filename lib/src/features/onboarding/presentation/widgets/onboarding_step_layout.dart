@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heroicons/heroicons.dart';
 
 class OnboardingStepLayout extends StatelessWidget {
   final String title;
@@ -69,7 +70,7 @@ class OnboardingStepLayout extends StatelessWidget {
               if (onBack != null)
                 TextButton.icon(
                   onPressed: onBack,
-                  icon: const Icon(Icons.chevron_left),
+                  icon: const HeroIcon(HeroIcons.chevronLeft),
                   label: const Text('Back'),
                   style: TextButton.styleFrom(
                     foregroundColor: const Color(0xFF4B5563), // gray-600

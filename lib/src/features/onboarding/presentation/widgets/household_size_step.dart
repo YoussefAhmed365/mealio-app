@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heroicons/heroicons.dart';
 import 'package:mealio/src/features/onboarding/presentation/providers/onboarding_controller.dart';
 import 'package:mealio/src/features/onboarding/presentation/widgets/onboarding_step_layout.dart';
 
@@ -23,7 +24,7 @@ class HouseholdSizeStep extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildButton(
-                  icon: Icons.remove,
+                  icon: HeroIcons.minus,
                   onTap: () {
                     final current = controller.onboardingData.persons;
                     if (current > 1) controller.updatePersons(current - 1);
@@ -48,7 +49,7 @@ class HouseholdSizeStep extends StatelessWidget {
                 ),
                 const SizedBox(width: 32),
                 _buildButton(
-                  icon: Icons.add,
+                  icon: HeroIcons.plus,
                   onTap: () {
                     final current = controller.onboardingData.persons;
                     if (current < 10) controller.updatePersons(current + 1);
@@ -62,7 +63,7 @@ class HouseholdSizeStep extends StatelessWidget {
     );
   }
 
-  Widget _buildButton({required IconData icon, required VoidCallback onTap}) {
+  Widget _buildButton({required HeroIcons icon, required VoidCallback onTap}) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(50),
@@ -73,7 +74,7 @@ class HouseholdSizeStep extends StatelessWidget {
           color: Colors.grey.shade100,
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, size: 30, color: Colors.grey.shade600),
+        child: HeroIcon(icon, size: 30, color: Colors.grey.shade600),
       ),
     );
   }
